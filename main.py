@@ -1,7 +1,6 @@
 """Digital Science Program 2023 - Jack Farrell"""
 
-from tkinter import Label, LabelFrame, Button, Tk
-
+from tkinter import Label, LabelFrame, Button, Tk, messagebox
 
 # L2 DISC Program 2023: Drama Prep
 
@@ -23,11 +22,17 @@ program.configure(bg="#E8C5D8")
 
 
 window = "opening window"
+activity_duration = []
+activity_duration_options = [
+    ["short", "medium", "long"], ["#7CDF64", "#E8C04A", "#FF7F51"], [[40, 40], [40, 160], [40, 280]]]
 
 
 def closeprogram():
     """This function closes the program when run"""
-    program.destroy()
+    quit_conformation = messagebox.askquestion(
+        "confirmation", "are you sure you want to exit?")
+    if quit_conformation == "yes":
+        program.destroy()
 
 
 exit_button = Button(program, command=closeprogram, text="exit",
@@ -35,9 +40,14 @@ exit_button = Button(program, command=closeprogram, text="exit",
 exit_button.place(x=1775, y=40)
 
 
+def select_activity(i):
+    print(i)
+
+
 def open_window(new_window, old_window):
     global opening_frame
     global info_frame
+    global start_frame
 
     if new_window == "opening window":
         window = new_window
@@ -46,13 +56,13 @@ def open_window(new_window, old_window):
             program, width=1720, height=900, bg="#E2B6CE")
         opening_frame.pack(anchor="nw")
 
-        start_button = Button(opening_frame, command=closeprogram, text="start", padx=16,
+        start_button = Button(opening_frame, command=lambda: open_window("start screen", window), text="start", padx=16,
                               pady=12, bg="#7CDF64", fg="#131117", font=("Arial", 35))
-        start_button.place(x=300, y=680)
+        start_button.place(x=550, y=680)
 
         info_button = Button(opening_frame, command=lambda: open_window("info screen", window), text="info",
                              padx=16, pady=12, bg="#E8C04A", fg="#131117", font=("Arial", 35))
-        info_button.place(x=900, y=680)
+        info_button.place(x=1000, y=680)
 
         intro_text = Label(opening_frame, text="Drama Preperation Program", font=(
             "Arial", 50), bg="#E2B6CE", fg="#131117")
@@ -90,10 +100,23 @@ def open_window(new_window, old_window):
             "Arial", 30), bg="#E2B6CE", fg="#131117")
         info_information4.place(x=60, y=400)
 
+    elif new_window == "start screen":
+        start_frame = LabelFrame(
+            program, width=1720, height=900, bg="#E2B6CE")
+        start_frame.pack(anchor="nw")
+        for i in range(len(activity_duration_options[0])):
+            activitybutton = Button(
+                start_frame, text=activity_duration_options[0][i], padx=16,
+                pady=12, bg=activity_duration_options[1][i], fg="#131117", font=("Arial", 25), command=lambda i=i: select_activity(i))
+            activitybutton.place(
+                x=activity_duration_options[2][i][0], y=activity_duration_options[2][i][1])
+
     if old_window == "opening window":
         opening_frame.destroy()
     elif old_window == "info screen":
         info_frame.destroy()
+    elif old_window == "start screen":
+        start_frame.destroy()
 
 
 open_window("opening window", "")
