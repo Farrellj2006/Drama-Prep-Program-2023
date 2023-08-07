@@ -22,15 +22,16 @@ program.configure(bg="#E8C5D8")
 
 
 window = "opening window"
-activity_duration = []
+activity_duration = ["please select a length of time",
+                     "please select a difficulty"]
 activity_duration_options = [
-    ["short", "medium", "long"], ["#7CDF64", "#E8C04A", "#FF7F51"], [[40, 40], [40, 160], [40, 280]]]
+    ["short", "mid-length", "long", "easy", "medium", "hard"], ["#7CDF64", "#E8C04A", "#FF7F51", "green", "orange", "red"], [[140, 140], [100, 260], [140, 380], [340, 140], [320, 260], [340, 380]]]
 
 
 def closeprogram():
     """This function closes the program when run"""
     quit_conformation = messagebox.askquestion(
-        "confirmation", "are you sure you want to exit?")
+        "Exit Confirmation", "are you sure you want to exit?")
     if quit_conformation == "yes":
         program.destroy()
 
@@ -40,15 +41,16 @@ exit_button = Button(program, command=closeprogram, text="exit",
 exit_button.place(x=1775, y=40)
 
 
-def select_activity(i):
-    print(i)
-
-
 def open_window(new_window, old_window):
-    global opening_frame
-    global info_frame
-    global start_frame
+    global opening_frame, info_frame, start_frame
 
+    if old_window == "opening window":
+        opening_frame.destroy()
+    elif old_window == "info screen":
+        info_frame.destroy()
+    elif old_window == "start screen":
+        start_frame.destroy()
+        # old frame not deleting for activity duration buttons
     if new_window == "opening window":
         window = new_window
 
@@ -101,6 +103,7 @@ def open_window(new_window, old_window):
         info_information4.place(x=60, y=400)
 
     elif new_window == "start screen":
+        window = "start screen"
         start_frame = LabelFrame(
             program, width=1720, height=900, bg="#E2B6CE")
         start_frame.pack(anchor="nw")
@@ -111,12 +114,28 @@ def open_window(new_window, old_window):
             activitybutton.place(
                 x=activity_duration_options[2][i][0], y=activity_duration_options[2][i][1])
 
-    if old_window == "opening window":
-        opening_frame.destroy()
-    elif old_window == "info screen":
-        info_frame.destroy()
-    elif old_window == "start screen":
-        start_frame.destroy()
+        testlabel_text = ", ".join(activity_duration)
+        testlabel = Label(start_frame, text=testlabel_text)
+        testlabel.place(x=60, y=60)
+
+
+def select_activity(i):
+    global activity_duration
+
+    if i == 0:
+        activity_duration[0] = "short"
+    elif i == 1:
+        activity_duration[0] = "mid-length"
+    elif i == 2:
+        activity_duration[0] = "long"
+    elif i == 3:
+        activity_duration[1] = "easy"
+    elif i == 4:
+        activity_duration[1] = "medium"
+    elif i == 5:
+        activity_duration[1] = "hard"
+
+    open_window("start screen", window)
 
 
 open_window("opening window", "")
