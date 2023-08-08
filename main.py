@@ -42,6 +42,7 @@ exit_button.place(x=1775, y=40)
 
 
 def open_window(new_window, old_window):
+    """This fuction is called when a new window needs to be opened, and also closes the old one"""
     global opening_frame, info_frame, start_frame
 
     if old_window == "opening window":
@@ -110,16 +111,27 @@ def open_window(new_window, old_window):
         for i in range(len(activity_duration_options[0])):
             activitybutton = Button(
                 start_frame, text=activity_duration_options[0][i], padx=16,
-                pady=12, bg=activity_duration_options[1][i], fg="#131117", font=("Arial", 25), command=lambda i=i: select_activity(i))
+                pady=12, bg=activity_duration_options[1][i], fg="#131117", font=("Arial", 25), command=lambda i=i: select_activity(i, window))
             activitybutton.place(
                 x=activity_duration_options[2][i][0], y=activity_duration_options[2][i][1])
 
-        testlabel_text = ", ".join(activity_duration)
+        testlabel_text = "length of time for prep: " + \
+            activity_duration[0] + \
+            "\nDifficulty of prep: " + activity_duration[1]
         testlabel = Label(start_frame, text=testlabel_text)
         testlabel.place(x=60, y=60)
 
+        activitystart_back_button = Button(start_frame, command=lambda: open_window(
+            "opening window", window), text="back", padx=10, pady=2, bg="#F45866", fg="#131117", font=("Arial", 25))
+        activitystart_back_button.place(x=1500, y=40)
 
-def select_activity(i):
+        continue_to_rep_button = Button(
+            start_frame, text="start prep", command=lambda: check_activity(activity_duration, window))
+        continue_to_rep_button.place(x=600, y=400)
+
+
+def select_activity(i, window):
+    """These butons allow the user to choose how difficult and long they want their prep to be"""
     global activity_duration
 
     if i == 0:
@@ -136,6 +148,17 @@ def select_activity(i):
         activity_duration[1] = "hard"
 
     open_window("start screen", window)
+
+
+def check_activity(selected_activities, window):
+    if selected_activities[0] == "please select a length of time" or selected_activities[1] == "please select a difficulty":
+        messagebox.showerror(
+            title=None, message="please select a prep duration and difficulty")
+    else:
+        confirm_prep = messagebox.askquestion(
+            title=None, message="are you sure you want to start the activity(s)?")
+        if confirm_prep == "yes":
+            open_window("activity window", window)
 
 
 open_window("opening window", "")
