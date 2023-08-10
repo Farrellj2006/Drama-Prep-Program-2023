@@ -1,6 +1,7 @@
 """Digital Science Program 2023 - Jack Farrell"""
 
 from tkinter import Label, LabelFrame, Button, Tk, messagebox
+# import random as r
 
 # L2 DISC Program 2023: Drama Prep
 
@@ -13,8 +14,7 @@ from tkinter import Label, LabelFrame, Button, Tk, messagebox
 # purple #724E91
 # yellow #E8C04A
 
-# pylint: disable = E1111
-
+# pylint: disable = E1111, E0601
 
 program = Tk()
 program.attributes('-fullscreen', True)
@@ -26,6 +26,8 @@ activity_duration = ["please select a length of time",
                      "please select a difficulty"]
 activity_duration_options = [
     ["short", "mid-length", "long", "easy", "medium", "hard"], ["#7CDF64", "#E8C04A", "#FF7F51", "green", "orange", "red"], [[140, 140], [100, 260], [140, 380], [340, 140], [320, 260], [340, 380]]]
+
+activity_options = ["cut lines", "who is your character", ""]
 
 
 def closeprogram():
@@ -51,7 +53,7 @@ def open_window(new_window, old_window):
         info_frame.destroy()
     elif old_window == "start screen":
         start_frame.destroy()
-        # old frame not deleting for activity duration buttons
+
     if new_window == "opening window":
         window = new_window
 
@@ -129,6 +131,12 @@ def open_window(new_window, old_window):
             start_frame, text="start prep", command=lambda: check_activity(activity_duration, window))
         continue_to_rep_button.place(x=600, y=400)
 
+    elif new_window == "activity window":
+        window = "activity screen"
+        activity_frame = LabelFrame(
+            program, width=1720, height=900, bg="#E2B6CE")
+        activity_frame.pack(anchor="nw")
+
 
 def select_activity(i, window):
     """These butons allow the user to choose how difficult and long they want their prep to be"""
@@ -151,6 +159,7 @@ def select_activity(i, window):
 
 
 def check_activity(selected_activities, window):
+    """checks for both activity settings to have a selection and gives error message to user"""
     if selected_activities[0] == "please select a length of time" or selected_activities[1] == "please select a difficulty":
         messagebox.showerror(
             title=None, message="please select a prep duration and difficulty")
