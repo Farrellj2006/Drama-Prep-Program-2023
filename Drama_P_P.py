@@ -1,7 +1,7 @@
-"""Digital Science Program 2023 - Jack Farrell"""
+"""Drama_P_P 2023 - Jack Farrell"""
 
-from tkinter import Label, LabelFrame, Button, Tk, messagebox
-# import random as r
+from tkinter import Label, LabelFrame, Button, Tk, messagebox, Entry
+import random as r
 
 # L2 DISC Program 2023: Drama Prep
 
@@ -35,7 +35,7 @@ calming_circle_options = ["colour breathing", "who is watching", ""]
 
 
 def closeprogram():
-    """This function closes the program when run"""
+    """This function confirms to close the program when run"""
     quit_conformation = messagebox.askquestion(
         "Exit Confirmation", "are you sure you want to exit?")
     if quit_conformation == "yes":
@@ -47,9 +47,17 @@ exit_button = Button(program, command=closeprogram, text="exit",
 exit_button.place(x=1775, y=40)
 
 
+def close_activity(currentwindow):
+    """This function confirms wether the user wants to exit the drama prep"""
+    quit_conformation = messagebox.askquestion(
+        "Exit Confirmation", "are you sure you want to exit? You will lose all progress")
+    if quit_conformation == "yes":
+        open_window("start screen", currentwindow)
+
+
 def open_window(new_window, old_window):
     """This fuction is called when a new window needs to be opened, and also closes the old one"""
-    global opening_frame, info_frame, start_frame
+    global opening_frame, info_frame, start_frame, activity_frame
 
     if old_window == "opening window":
         opening_frame.destroy()
@@ -57,6 +65,8 @@ def open_window(new_window, old_window):
         info_frame.destroy()
     elif old_window == "start screen":
         start_frame.destroy()
+    elif old_window == "activity window":
+        activity_frame.destroy()
 
     if new_window == "opening window":
         window = new_window
@@ -146,10 +156,38 @@ character. To start the program, return to the prevoius window", font=(
         continue_to_rep_button.place(x=600, y=400)
 
     elif new_window == "activity window":
-        window = "activity screen"
+        window = "activity window"
         activity_frame = LabelFrame(
             program, width=1720, height=900, bg="#E2B6CE")
         activity_frame.pack(anchor="nw")
+
+        activity_back_button = Button(activity_frame, command=lambda: close_activity(window), text="back",
+                                      padx=10, pady=2, bg="#F45866", fg="#131117", font=("Arial", 25))
+        activity_back_button.place(x=1500, y=40)
+
+        # for if the activity is "cut lines"
+        cut_line_gui = LabelFrame(
+            activity_frame, width=1200, height=800, bg="red")
+        cut_line_gui.place(x=50, y=50)
+
+        line_input_label = Label(cut_line_gui, text="enter line to learn here")
+        line_input_label.place(x=50, y=50)
+        line_input = Entry(cut_line_gui, width=120)
+        line_input.place(x=200, y=50)
+
+        recieve_line = Button(cut_line_gui, text="enter",
+                              command=lambda: print(line_input.get()))
+        recieve_line.place(x=60, y=80)
+
+        # elif randactivity == "who is your character":
+        # pass
+        # elif randactivity == "emotion memory recall":
+        # pass
+        # elif randactivity == "calming circle":
+        # circle_act =  randomizing code here
+        # pass
+        # elif randactivity == "info/tips":
+        # pass
 
 
 def select_activity(i, window, activity_duration):
@@ -185,5 +223,6 @@ select a difficulty":
 
 
 open_window("opening window", "")
+
 
 program.mainloop()
