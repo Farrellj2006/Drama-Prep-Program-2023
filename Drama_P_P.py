@@ -50,9 +50,18 @@ exit_button.place(x=1775, y=40)
 def close_activity(currentwindow):
     """This function confirms wether the user wants to exit the drama prep"""
     quit_conformation = messagebox.askquestion(
-        "Exit Confirmation", "are you sure you want to exit? You will lose all progress")
+        "Exit Confirmation", "are you sure you want to exit? You will not be able to continue")
     if quit_conformation == "yes":
         open_window("start screen", currentwindow)
+
+
+def clean_file():
+    erase_conformation = messagebox.askquestion(
+        "Erase Confirmation", "are you sure you want to erase your \
+records contents? You will lose all rcords permanently")
+    if erase_conformation == "yes":
+        with open("lines.txt", "w", encoding="utf-8") as f:
+            f.write("")
 
 
 def open_window(new_window, old_window):
@@ -88,6 +97,10 @@ def open_window(new_window, old_window):
         intro_text = Label(opening_frame, text="Drama Preperation Program", font=(
             "Arial", 50), bg="#E2B6CE", fg="#131117")
         intro_text.place(x=400, y=225)
+
+        clear_records = Button(opening_frame, command=clean_file, text="clear warmup memory",
+                               padx=16, pady=12, bg="white", fg="black", font=("Arial", 15))
+        clear_records.place(x=1440, y=800)
 
     elif new_window == "info screen":
         window = new_window
@@ -161,13 +174,14 @@ character. To start the program, return to the prevoius window", font=(
             program, width=1720, height=900, bg="#E2B6CE")
         activity_frame.pack(anchor="nw")
 
-        activity_back_button = Button(activity_frame, command=lambda: close_activity(window), text="back",
-                                      padx=10, pady=2, bg="#F45866", fg="#131117", font=("Arial", 25))
+        activity_back_button = Button(activity_frame, command=lambda: close_activity(window),
+                                      text="back", padx=10, pady=2,
+                                      bg="#F45866", fg="#131117", font=("Arial", 25))
         activity_back_button.place(x=1500, y=40)
 
         # for if the activity is "cut lines"
         cut_line_gui = LabelFrame(
-            activity_frame, width=1200, height=800, bg="red")
+            activity_frame, width=1200, height=800, bg="orange")
         cut_line_gui.place(x=50, y=50)
 
         line_input_label = Label(cut_line_gui, text="enter line to learn here")
@@ -176,7 +190,7 @@ character. To start the program, return to the prevoius window", font=(
         line_input.place(x=200, y=50)
 
         recieve_line = Button(cut_line_gui, text="enter",
-                              command=lambda: print(line_input.get()))
+                              command=lambda: write_to_lines(line_input))
         recieve_line.place(x=60, y=80)
 
         # elif randactivity == "who is your character":
@@ -206,6 +220,14 @@ def select_activity(i, window, activity_duration):
         activity_duration[1] = "hard"
 
     open_window("start screen", window)
+
+
+def write_to_lines(line_from_input):
+    """Function to send lines to new line in file"""
+    file_line_input = line_from_input.get()
+    print(file_line_input)
+    with open("lines.txt", "a", encoding="utf-8") as file:
+        file.write(file_line_input)
 
 
 def check_activity(selected_activities, window):
