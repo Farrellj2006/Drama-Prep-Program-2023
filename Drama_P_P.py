@@ -32,6 +32,8 @@ activity_duration_options = [
 activity_options = ["cut lines", "who is your character",
                     "emotion memory recall", "calming circle", "info/tips"]
 calming_circle_options = ["colour breathing", "who is watching", ""]
+cut_line = ""
+letter_list = []
 
 
 def closeprogram():
@@ -56,6 +58,7 @@ def close_activity(currentwindow):
 
 
 def clean_file():
+    """Erases text record of drama prep"""
     erase_conformation = messagebox.askquestion(
         "Erase Confirmation", "are you sure you want to erase your \
 records contents? You will lose all rcords permanently")
@@ -66,7 +69,7 @@ records contents? You will lose all rcords permanently")
 
 def open_window(new_window, old_window):
     """This fuction is called when a new window needs to be opened, and also closes the old one"""
-    global opening_frame, info_frame, start_frame, activity_frame
+    global opening_frame, info_frame, start_frame, activity_frame, letter_list
 
     if old_window == "opening window":
         opening_frame.destroy()
@@ -140,6 +143,7 @@ character. To start the program, return to the prevoius window", font=(
 
     elif new_window == "start screen":
         window = "start screen"
+        letter_list = []
         start_frame = LabelFrame(
             program, width=1720, height=900, bg="#E2B6CE")
         start_frame.pack(anchor="nw")
@@ -170,6 +174,7 @@ character. To start the program, return to the prevoius window", font=(
 
     elif new_window == "activity window":
         window = "activity window"
+        letter_list = []
         activity_frame = LabelFrame(
             program, width=1720, height=900, bg="#E2B6CE")
         activity_frame.pack(anchor="nw")
@@ -190,7 +195,7 @@ character. To start the program, return to the prevoius window", font=(
         line_input.place(x=200, y=50)
 
         recieve_line = Button(cut_line_gui, text="enter",
-                              command=lambda: write_to_lines(line_input))
+                              command=lambda: write_to_lines(line_input, window))
         recieve_line.place(x=60, y=80)
 
         # elif randactivity == "who is your character":
@@ -222,12 +227,23 @@ def select_activity(i, window, activity_duration):
     open_window("start screen", window)
 
 
-def write_to_lines(line_from_input):
+def write_to_lines(line_from_input, window):
     """Function to send lines to new line in file"""
     file_line_input = line_from_input.get()
     print(file_line_input)
     with open("lines.txt", "a", encoding="utf-8") as file:
-        file.write(file_line_input)
+        file.write("Users line to learn:  " + file_line_input + "\n")
+    for letter in file_line_input:
+        letter_list.append(letter)
+    print(letter_list)
+    try:
+        no_of_words = r.randint(0, letter_list.count(" ")-1)
+    except ValueError:
+        messagebox.showerror(
+            title=None, message="please add more words to practice")
+    print(no_of_words)
+
+    open_window("activity window", window)
 
 
 def check_activity(selected_activities, window):
