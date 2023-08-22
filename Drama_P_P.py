@@ -69,7 +69,7 @@ records contents? You will lose all rcords permanently")
 
 def open_window(new_window, old_window):
     """This fuction is called when a new window needs to be opened, and also closes the old one"""
-    global opening_frame, info_frame, start_frame, activity_frame, letter_list
+    global opening_frame, info_frame, start_frame, activity_frame, letter_list, space_loc
 
     if old_window == "opening window":
         opening_frame.destroy()
@@ -229,6 +229,7 @@ def select_activity(i, window, activity_duration):
 
 def write_to_lines(line_from_input, window):
     """Function to send lines to new line in file"""
+    partial_line = []
     file_line_input = line_from_input.get()
     print(file_line_input)
     with open("lines.txt", "a", encoding="utf-8") as file:
@@ -237,11 +238,21 @@ def write_to_lines(line_from_input, window):
         letter_list.append(letter)
     print(letter_list)
     try:
-        no_of_words = r.randint(0, letter_list.count(" ")-1)
+        no_of_words = r.randint(1, letter_list.count(" ")-1)
     except ValueError:
         messagebox.showerror(
             title=None, message="please add more words to practice")
-    print(no_of_words)
+    print(no_of_words, "num of words to print")
+    # partial line
+    for char in letter_list:
+        if not no_of_words == 0:
+            if not char == ' ':
+                partial_line.append(char)
+            else:
+                no_of_words += -1
+                partial_line.append(char)
+    partial_line.pop(len(partial_line)-1)
+    print(partial_line)
 
     open_window("activity window", window)
 
