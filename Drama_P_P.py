@@ -34,6 +34,9 @@ activity_options = ["cut lines", "who is your character",
 calming_circle_options = ["colour breathing", "who is watching", ""]
 cut_line = ""
 letter_list = []
+line_cycle = 0
+difficulty = 0
+prep_time = 0
 
 
 def closeprogram():
@@ -69,7 +72,8 @@ records contents? You will lose all rcords permanently")
 
 def open_window(new_window, old_window):
     """This fuction is called when a new window needs to be opened, and also closes the old one"""
-    global opening_frame, info_frame, start_frame, activity_frame, letter_list, space_loc
+    global opening_frame, info_frame, \
+        start_frame, activity_frame, letter_list, line_cycle, activity2_frame, difficulty
 
     if old_window == "opening window":
         opening_frame.destroy()
@@ -79,6 +83,8 @@ def open_window(new_window, old_window):
         start_frame.destroy()
     elif old_window == "activity window":
         activity_frame.destroy()
+    elif old_window == "activity window":
+        activity2_frame.destroy()
 
     if new_window == "opening window":
         window = new_window
@@ -189,7 +195,8 @@ character. To start the program, return to the prevoius window", font=(
             activity_frame, width=1200, height=800, bg="orange")
         cut_line_gui.place(x=50, y=50)
 
-        line_input_label = Label(cut_line_gui, text="enter line to learn here")
+        line_input_label = Label(
+            cut_line_gui, text="enter line to learn here: ")
         line_input_label.place(x=50, y=50)
         line_input = Entry(cut_line_gui, width=120)
         line_input.place(x=200, y=50)
@@ -197,6 +204,21 @@ character. To start the program, return to the prevoius window", font=(
         recieve_line = Button(cut_line_gui, text="enter",
                               command=lambda: write_to_lines(line_input, window))
         recieve_line.place(x=60, y=80)
+
+        if line_cycle > difficulty+1:
+            open_window("activity window 2", window)
+
+    elif new_window == "activity window 2":
+        window = "activity window 2"
+
+        activity2_frame = LabelFrame(
+            program, width=1720, height=900, bg="#E2B6CE")
+        activity2_frame.pack(anchor="nw")
+
+        activity2_back_button = Button(activity2_frame, command=lambda: close_activity(window),
+                                       text="back", padx=10, pady=2,
+                                       bg="#F45866", fg="#131117", font=("Arial", 25))
+        activity2_back_button.place(x=1500, y=40)
 
         # elif randactivity == "who is your character":
         # pass
@@ -211,25 +233,33 @@ character. To start the program, return to the prevoius window", font=(
 
 def select_activity(i, window, activity_duration):
     """These butons allow the user to choose how difficult and long they want their prep to be"""
+    global difficulty, prep_time
     if i == 0:
         activity_duration[0] = "short"
+        prep_time = 2
     elif i == 1:
         activity_duration[0] = "mid-length"
+        prep_time = 3
     elif i == 2:
         activity_duration[0] = "long"
+        prep_time = 4
     elif i == 3:
         activity_duration[1] = "easy"
+        difficulty = 1
     elif i == 4:
         activity_duration[1] = "medium"
+        difficulty = 2
     elif i == 5:
         activity_duration[1] = "hard"
+        difficulty = 3
 
     open_window("start screen", window)
 
 
 def write_to_lines(line_from_input, window):
     """Function to send lines to new line in file"""
-    partial_line = []
+    global line_cycle
+    cut_line = []
     file_line_input = line_from_input.get()
     print(file_line_input)
     with open("lines.txt", "a", encoding="utf-8") as file:
@@ -242,17 +272,24 @@ def write_to_lines(line_from_input, window):
     except ValueError:
         messagebox.showerror(
             title=None, message="please add more words to practice")
-    print(no_of_words, "num of words to print")
     # partial line
     for char in letter_list:
         if not no_of_words == 0:
             if not char == ' ':
-                partial_line.append(char)
+                cut_line.append(char)
             else:
                 no_of_words += -1
-                partial_line.append(char)
-    partial_line.pop(len(partial_line)-1)
-    print(partial_line)
+                cut_line.append(char)
+    cut_line.pop(len(cut_line)-1)
+    cut_line = "".join(cut_line)
+    print(cut_line)
+    line_cycle += 1
+    if line_cycle < difficulty+2:
+        messagebox.showinfo(
+            title=None, message=f"your, line has been inputted, please input {difficulty-line_cycle+2} more")
+    else:
+        messagebox.showinfo(
+            title=None, message=f"your line has been inputted, continuing to the second part of activity...")
 
     open_window("activity window", window)
 
