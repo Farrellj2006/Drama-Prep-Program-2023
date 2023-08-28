@@ -29,14 +29,16 @@ activity_duration_options = [
     ["#7CDF64", "#E8C04A", "#FF7F51", "green", "orange", "red"],
     [[140, 140], [100, 260], [140, 380], [340, 140], [320, 260], [340, 380]]]
 
-activity_options = ["cut lines", "who is your character",
-                    "emotion memory recall", "calming circle", "info/tips"]
+activity_options_forlater = ["cut lines", "who is your character",
+                             "emotion memory recall", "calming circle", "info/tips"]
 calming_circle_options = ["colour breathing", "who is watching", ""]
 cut_line = ""
 letter_list = []
 line_cycle = 0
 difficulty = 0
 prep_time = 0
+
+activity_options = ["cut lines"]
 
 
 def closeprogram():
@@ -72,8 +74,7 @@ records contents? You will lose all rcords permanently")
 
 def open_window(new_window, old_window):
     """This fuction is called when a new window needs to be opened, and also closes the old one"""
-    global opening_frame, info_frame, \
-        start_frame, activity_frame, letter_list, line_cycle, activity2_frame, difficulty
+    global opening_frame, info_frame, start_frame, activity_frame, letter_list, line_cycle, cut_lines_2_gui, difficulty, what_act, str_cut_line, file_line_input
 
     if old_window == "opening window":
         opening_frame.destroy()
@@ -83,8 +84,8 @@ def open_window(new_window, old_window):
         start_frame.destroy()
     elif old_window == "activity window":
         activity_frame.destroy()
-    elif old_window == "activity window":
-        activity2_frame.destroy()
+    elif old_window == "cut lines 2":
+        cut_lines_2_gui.destroy()
 
     if new_window == "opening window":
         window = new_window
@@ -178,6 +179,8 @@ character. To start the program, return to the prevoius window", font=(
             command=lambda: check_activity(activity_duration, window))
         continue_to_rep_button.place(x=600, y=400)
 
+        what_act = activity_options[r.randint(0, len(activity_options)-1)]
+
     elif new_window == "activity window":
         window = "activity window"
         letter_list = []
@@ -190,45 +193,53 @@ character. To start the program, return to the prevoius window", font=(
                                       bg="#F45866", fg="#131117", font=("Arial", 25))
         activity_back_button.place(x=1500, y=40)
 
-        # for if the activity is "cut lines"
-        cut_line_gui = LabelFrame(
-            activity_frame, width=1200, height=800, bg="orange")
-        cut_line_gui.place(x=50, y=50)
+        if what_act == "cut lines":
 
-        line_input_label = Label(
-            cut_line_gui, text="enter line to learn here: ")
-        line_input_label.place(x=50, y=50)
-        line_input = Entry(cut_line_gui, width=120)
-        line_input.place(x=200, y=50)
+            cut_line_gui = LabelFrame(
+                activity_frame, width=1200, height=800, bg="orange")
+            cut_line_gui.place(x=50, y=50)
 
-        recieve_line = Button(cut_line_gui, text="enter",
-                              command=lambda: write_to_lines(line_input, window))
-        recieve_line.place(x=60, y=80)
+            line_input_label = Label(
+                cut_line_gui, text="enter line to learn here: ")
+            line_input_label.place(x=50, y=50)
+            line_input = Entry(cut_line_gui, width=120)
+            line_input.place(x=200, y=50)
 
-        if line_cycle > difficulty+1:
-            open_window("activity window 2", window)
+            recieve_line = Button(cut_line_gui, text="enter",
+                                  command=lambda: write_to_lines(line_input, window))
+            recieve_line.place(x=60, y=80)
 
-    elif new_window == "activity window 2":
-        window = "activity window 2"
+            if line_cycle > difficulty+1:
+                open_window("cut lines 2", window)
 
-        activity2_frame = LabelFrame(
+        # elif what_act == "who is your character":
+        # code
+        # elif what_act == "emotion memory recall":
+        # code
+        # elif what_act == "calming circle":
+        #   circle_act =  randomizing code here
+        # elif what_act == "info/tips":
+        # code
+
+    elif new_window == "cut lines 2":
+        window = "cut lines 2"
+
+        cut_lines_2_gui = LabelFrame(
             program, width=1720, height=900, bg="#E2B6CE")
-        activity2_frame.pack(anchor="nw")
+        cut_lines_2_gui.pack(anchor="nw")
 
-        activity2_back_button = Button(activity2_frame, command=lambda: close_activity(window),
-                                       text="back", padx=10, pady=2,
-                                       bg="#F45866", fg="#131117", font=("Arial", 25))
-        activity2_back_button.place(x=1500, y=40)
-
-        # elif randactivity == "who is your character":
-        # pass
-        # elif randactivity == "emotion memory recall":
-        # pass
-        # elif randactivity == "calming circle":
-        # circle_act =  randomizing code here
-        # pass
-        # elif randactivity == "info/tips":
-        # pass
+        cut_lines_2_back_button = Button(cut_lines_2_gui, command=lambda: close_activity(window),
+                                         text="back", padx=10, pady=2,
+                                         bg="#F45866", fg="#131117", font=("Arial", 25))
+        cut_lines_2_back_button.place(x=1500, y=40)
+        line_piece = Label(cut_lines_2_gui,
+                           text=f"Please enter the rest of this line: {str_cut_line}")
+        line_piece.place(x=50, y=300)
+        line_piece_input = Entry(cut_lines_2_gui, width=100, bg="white")
+        line_piece_input.place(x=400, y=300)
+        whole_line_input = Button(cut_lines_2_gui, text="enter",
+                                  command=lambda: check_correct_line(line_piece_input.get()))
+        whole_line_input.place(x=60, y=80)
 
 
 def select_activity(i, window, activity_duration):
@@ -257,9 +268,10 @@ def select_activity(i, window, activity_duration):
 
 
 def write_to_lines(line_from_input, window):
-    """Function to send lines to new line in file"""
-    global line_cycle
+    """Function to send lines to new line in file and make a var to compare with later"""
+    global line_cycle, str_cut_line, file_line_input
     cut_line = []
+    str_cut_line = ""
     file_line_input = line_from_input.get()
     print(file_line_input)
     with open("lines.txt", "a", encoding="utf-8") as file:
@@ -280,18 +292,30 @@ def write_to_lines(line_from_input, window):
             else:
                 no_of_words += -1
                 cut_line.append(char)
-    cut_line.pop(len(cut_line)-1)
-    cut_line = "".join(cut_line)
-    print(cut_line)
+    str_cut_line = "".join(cut_line)
+    print(str_cut_line)
     line_cycle += 1
     if line_cycle < difficulty+2:
         messagebox.showinfo(
-            title=None, message=f"your, line has been inputted, please input {difficulty-line_cycle+2} more")
+            title=None, message=f"your line has been inputted, \
+please input {difficulty-line_cycle+2} more")
     else:
         messagebox.showinfo(
-            title=None, message=f"your line has been inputted, continuing to the second part of activity...")
+            title=None, message="your line has been inputted, \
+continuing to the second part of activity...")
 
     open_window("activity window", window)
+
+
+def check_correct_line(whole_line):
+    """checks if the user has inputted the correct line into the entry field"""
+    global file_line_input, str_cut_line
+    if str(str_cut_line + whole_line) == file_line_input:
+        messagebox.showinfo(
+            title=None, message="you inputted the line in correctly!")
+    else:
+        messagebox.showwarning(
+            title=None, message=f"you inputted the line in wrong, the whole line was {file_line_input}")
 
 
 def check_activity(selected_activities, window):
