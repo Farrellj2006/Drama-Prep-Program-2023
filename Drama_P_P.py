@@ -34,6 +34,8 @@ activity_options_forlater = ["cut lines", "who is your character",
 calming_circle_options = ["colour breathing", "who is watching", ""]
 cut_line = ""
 letter_list = []
+word_list = []
+used_sentences = []
 line_cycle = 0
 difficulty = 0
 prep_time = 0
@@ -74,7 +76,7 @@ records contents? You will lose all rcords permanently")
 
 def open_window(new_window, old_window):
     """This fuction is called when a new window needs to be opened, and also closes the old one"""
-    global opening_frame, info_frame, start_frame, activity_frame, letter_list, line_cycle, cut_lines_2_gui, difficulty, what_act, str_cut_line, file_line_input
+    global opening_frame, info_frame, start_frame, activity_frame, letter_list, line_cycle, cut_lines_2_gui, difficulty, what_act, str_cut_line, file_line_input, word_list, used_sentences
 
     if old_window == "opening window":
         opening_frame.destroy()
@@ -151,6 +153,8 @@ character. To start the program, return to the prevoius window", font=(
     elif new_window == "start screen":
         window = "start screen"
         letter_list = []
+        word_list = []
+        used_sentences = []
         start_frame = LabelFrame(
             program, width=1720, height=900, bg="#E2B6CE")
         start_frame.pack(anchor="nw")
@@ -184,6 +188,8 @@ character. To start the program, return to the prevoius window", font=(
     elif new_window == "activity window":
         window = "activity window"
         letter_list = []
+        word_list = []
+        used_sentences = []
         activity_frame = LabelFrame(
             program, width=1720, height=900, bg="#E2B6CE")
         activity_frame.pack(anchor="nw")
@@ -224,6 +230,10 @@ character. To start the program, return to the prevoius window", font=(
     elif new_window == "cut lines 2":
         window = "cut lines 2"
 
+        word_to_use = r.randint(0, len(word_list)-1)
+        while word_to_use in used_sentences:
+            word_to_use = r.randint(0, len(word_list)-1)
+
         cut_lines_2_gui = LabelFrame(
             program, width=1720, height=900, bg="#E2B6CE")
         cut_lines_2_gui.pack(anchor="nw")
@@ -238,7 +248,8 @@ character. To start the program, return to the prevoius window", font=(
         line_piece_input = Entry(cut_lines_2_gui, width=100, bg="white")
         line_piece_input.place(x=400, y=300)
         whole_line_input = Button(cut_lines_2_gui, text="enter",
-                                  command=lambda: check_correct_line(line_piece_input.get()))
+                                  command=lambda:
+                                  check_correct_line(line_piece_input.get(), window))
         whole_line_input.place(x=60, y=80)
 
 
@@ -269,22 +280,20 @@ def select_activity(i, window, activity_duration):
 
 def write_to_lines(line_from_input, window):
     """Function to send lines to new line in file and make a var to compare with later"""
-    global line_cycle, str_cut_line, file_line_input
+    global line_cycle, str_cut_line, file_line_input, word_list
     cut_line = []
     str_cut_line = ""
     file_line_input = line_from_input.get()
-    print(file_line_input)
     with open("lines.txt", "a", encoding="utf-8") as file:
         file.write("Users line to learn:  " + file_line_input + "\n")
     for letter in file_line_input:
         letter_list.append(letter)
-    print(letter_list)
     try:
         no_of_words = r.randint(1, letter_list.count(" ")-1)
     except ValueError:
         messagebox.showerror(
             title=None, message="please add more words to practice")
-    # partial line
+    # cut the line into 2 sections
     for char in letter_list:
         if not no_of_words == 0:
             if not char == ' ':
@@ -293,8 +302,8 @@ def write_to_lines(line_from_input, window):
                 no_of_words += -1
                 cut_line.append(char)
     str_cut_line = "".join(cut_line)
-    print(str_cut_line)
     line_cycle += 1
+    word_list.append(str_cut_line)
     if line_cycle < difficulty+2:
         messagebox.showinfo(
             title=None, message=f"your line has been inputted, \
@@ -307,7 +316,7 @@ continuing to the second part of activity...")
     open_window("activity window", window)
 
 
-def check_correct_line(whole_line):
+def check_correct_line(whole_line, currentwindow):
     """checks if the user has inputted the correct line into the entry field"""
     global file_line_input, str_cut_line
     if str(str_cut_line + whole_line) == file_line_input:
@@ -315,7 +324,9 @@ def check_correct_line(whole_line):
             title=None, message="you inputted the line in correctly!")
     else:
         messagebox.showwarning(
-            title=None, message=f"you inputted the line in wrong, the whole line was {file_line_input}")
+            title=None,
+            message=f"you inputted the line in wrong, the whole line was:   {file_line_input}")
+    open_window("cut lines 2", currentwindow)
 
 
 def check_activity(selected_activities, window):
