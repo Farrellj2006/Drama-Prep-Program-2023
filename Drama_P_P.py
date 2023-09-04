@@ -159,8 +159,6 @@ character. To start the program, return to the prevoius window", font=(
         word_list = []
         used_sentences = []
         file_line_input = []
-        difficulty = 0
-        prep_time = 0
         start_frame = LabelFrame(
             program, width=1720, height=900, bg="#E2B6CE")
         start_frame.pack(anchor="nw")
@@ -298,38 +296,44 @@ def write_to_lines(line_from_input, window):
     global line_cycle, str_cut_line, file_line_input, word_list
     cut_line = []
     str_cut_line = ""
-    file_line_input.append(line_from_input.get())
-    print(file_line_input, "    file line input")
-    with open("lines.txt", "a", encoding="utf-8") as file:
-        file.write("Users line to learn:  " + file_line_input[-1] + "\n")
-    for letter in file_line_input[-1]:
-        letter_list.append(letter)
-    try:
-        no_of_words = r.randint(1, letter_list.count(" ")-1)
-    except ValueError:
-        messagebox.showerror(
-            title=None, message="please add more words to practice")
-    # cut the line into 2 sections
-    for char in letter_list:
-        if not no_of_words == 0:
-            if not char == ' ':
-                cut_line.append(char)
+
+    if not line_from_input.get().count('  ') >= 1:
+        # code currently checks for not having consecutive spaces but can still accept not enough chars, as well as saving incorrect inputs
+        file_line_input.append(line_from_input.get())
+        print(file_line_input, "    file line input")
+        with open("lines.txt", "a", encoding="utf-8") as file:
+            file.write("Users line to learn:  " + file_line_input[-1] + "\n")
+        for letter in file_line_input[-1]:
+            letter_list.append(letter)
+        try:
+            no_of_words = r.randint(1, letter_list.count(" ")-1)
+
+            # cut the line into 2 sections
+            for char in letter_list:
+                if not no_of_words == 0:
+                    if not char == ' ':
+                        cut_line.append(char)
+                    else:
+                        no_of_words += -1
+                        cut_line.append(char)
+            str_cut_line = "".join(cut_line)
+            line_cycle += 1
+            word_list.append(str_cut_line)
+            if line_cycle < difficulty+2:
+                messagebox.showinfo(title=None, message=f"your line has been inputted, \
+    please input {difficulty-line_cycle+2} more")
             else:
-                no_of_words += -1
-                cut_line.append(char)
-    str_cut_line = "".join(cut_line)
-    line_cycle += 1
-    word_list.append(str_cut_line)
-    if line_cycle < difficulty+2:
-        messagebox.showinfo(
-            title=None, message=f"your line has been inputted, \
-please input {difficulty-line_cycle+2} more")
+                messagebox.showinfo(title=None, message="your line has been inputted, \
+    continuing to the second part of the activity...")
+            print(word_list)
+            open_window("activity window", window)
+
+        except ValueError:
+            messagebox.showerror(
+                title=None, message="please add more words to practice")
     else:
-        messagebox.showinfo(
-            title=None, message="your line has been inputted, \
-continuing to the second part of activity...")
-    print(word_list)
-    open_window("activity window", window)
+        messagebox.showerror(
+            title=None, message="please do not type consecutive spaces")
 
 
 def check_correct_line(whole_line, currentwindow):
