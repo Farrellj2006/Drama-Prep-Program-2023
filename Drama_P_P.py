@@ -291,46 +291,66 @@ def select_activity(i, window, activity_duration):
     open_window("start screen", window)
 
 
-def write_to_lines(line_from_input, window):
+def write_to_lines(line_from_input_line, window):
     """Function to send lines to new line in file and make a var to compare with later"""
     global line_cycle, str_cut_line, file_line_input, word_list
     cut_line = []
     str_cut_line = ""
 
-    if not line_from_input.get().count('  ') >= 1:
-        # code currently checks for not having consecutive spaces but can still accept not enough chars, as well as saving incorrect inputs
-        file_line_input.append(line_from_input.get())
-        print(file_line_input, "    file line input")
-        with open("lines.txt", "a", encoding="utf-8") as file:
-            file.write("Users line to learn:  " + file_line_input[-1] + "\n")
-        for letter in file_line_input[-1]:
-            letter_list.append(letter)
-        try:
-            no_of_words = r.randint(1, letter_list.count(" ")-1)
+# code to filter out incorrect inputs
+    if not line_from_input_line.get().count('  ') >= 1:
+        if not line_from_input_line.get().count('') == 1:
+            if not line_from_input_line.get().count(' ') == 1:
+                if not line_from_input_line.get()[-1] == ' ':
+                    if line_from_input_line.get().count(' ') >= 3:
+                        file_line_input.append(line_from_input_line.get())
+                        print(file_line_input, "    file line input")
+                        with open("lines.txt", "a", encoding="utf-8") as file:
+                            file.write("Users line to learn:  " +
+                                       file_line_input[-1] + "\n")
+                        for letter in file_line_input[-1]:
+                            letter_list.append(letter)
+                        try:
+                            no_of_words = r.randint(
+                                1, letter_list.count(" ")-1)
 
-            # cut the line into 2 sections
-            for char in letter_list:
-                if not no_of_words == 0:
-                    if not char == ' ':
-                        cut_line.append(char)
+                            # cut the line into 2 sections
+                            for char in letter_list:
+                                if not no_of_words == 0:
+                                    if not char == ' ':
+                                        cut_line.append(char)
+                                    else:
+                                        no_of_words += -1
+                                        cut_line.append(char)
+                            str_cut_line = "".join(cut_line)
+                            line_cycle += 1
+                            word_list.append(str_cut_line)
+                            if line_cycle < difficulty+2:
+                                messagebox.showinfo(title=None,
+                                                    message=f"your line has been inputted, \
+please input {difficulty-line_cycle+2} more")
+                            else:
+                                messagebox.showinfo(title=None,
+                                                    message="your line has been inputted, \
+continuing to the second part of the activity...")
+                            print(word_list)
+                            open_window("activity window", window)
+
+                        except ValueError:
+                            messagebox.showerror(
+                                title=None, message="please add more words to practice")
                     else:
-                        no_of_words += -1
-                        cut_line.append(char)
-            str_cut_line = "".join(cut_line)
-            line_cycle += 1
-            word_list.append(str_cut_line)
-            if line_cycle < difficulty+2:
-                messagebox.showinfo(title=None, message=f"your line has been inputted, \
-    please input {difficulty-line_cycle+2} more")
+                        messagebox.showerror(
+                            title=None, message="please add more words to practice")
+                else:
+                    messagebox.showerror(
+                        title=None, message="please do not end your input with a space")
             else:
-                messagebox.showinfo(title=None, message="your line has been inputted, \
-    continuing to the second part of the activity...")
-            print(word_list)
-            open_window("activity window", window)
-
-        except ValueError:
+                messagebox.showerror(
+                    title=None, message="please enter multiple words into the entry field")
+        else:
             messagebox.showerror(
-                title=None, message="please add more words to practice")
+                title=None, message="please enter multiple words into the entry field")
     else:
         messagebox.showerror(
             title=None, message="please do not type consecutive spaces")
