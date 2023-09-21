@@ -16,6 +16,8 @@ import random as r
 
 # pylint: disable = E1111, E0601, W0601, W0621, C0103
 
+# ctrl + f  "what_act"
+
 program = Tk()
 program.attributes('-fullscreen', True)
 program.configure(bg="#E8C5D8")
@@ -70,8 +72,8 @@ def close_activity(currentwindow):
 def clean_file():
     """Erases text record of drama prep"""
     erase_conformation = messagebox.askquestion(
-        "Erase Confirmation", "are you sure you want to erase your \
-records contents? You will lose all rcords permanently")
+        "Erase Confirmation", "are you sure you want to erase your "
+        "records contents? You will lose all rcords permanently")
     if erase_conformation == "yes":
         with open("lines.txt", "w", encoding="utf-8") as f:
             f.write("")
@@ -139,14 +141,15 @@ def open_window(new_window, old_window):
         info_information1.place(x=1250, y=800)
 
         info_information2 = Label(info_frame,
-                                  text="This program is designed to help users \
-to prepare for drama performances",
+                                  text="This program is designed to help users "
+                                  "to prepare for drama performances",
                                   font=("Arial", 30), bg="#E2B6CE", fg="#131117")
         info_information2.place(x=60, y=300)
 
-        info_information3 = Label(info_frame, text="where they need to be in \
-character. To start the program, return to the prevoius window", font=(
-            "Arial", 30), bg="#E2B6CE", fg="#131117")
+        info_information3 = Label(info_frame, text="where they need to be in "
+                                  "character. To start the program, return to the prevoius "
+                                  "window", font=(
+                                      "Arial", 30), bg="#E2B6CE", fg="#131117")
         info_information3.place(x=60, y=350)
 
         info_information4 = Label(info_frame, text="and press START.", font=(
@@ -168,6 +171,7 @@ character. To start the program, return to the prevoius window", font=(
                 pady=12, bg=activity_duration_options[1][i],
                 fg="#131117", font=("Arial", 25),
                 command=lambda i=i: select_activity(i, window, activity_duration))
+
             activitybutton.place(
                 x=activity_duration_options[2][i][0], y=activity_duration_options[2][i][1])
 
@@ -182,12 +186,10 @@ character. To start the program, return to the prevoius window", font=(
             padx=10, pady=2, bg="#F45866", fg="#131117", font=("Arial", 25))
         activitystart_back_button.place(x=1500, y=40)
 
-        continue_to_rep_button = Button(
+        continue_to_prep_button = Button(
             start_frame, text="start prep",
             command=lambda: check_activity(activity_duration, window))
-        continue_to_rep_button.place(x=600, y=400)
-
-        what_act = activity_options[r.randint(0, len(activity_options)-1)]
+        continue_to_prep_button.place(x=600, y=400)
 
     elif new_window == "activity window":
         window = "activity window"
@@ -201,6 +203,8 @@ character. To start the program, return to the prevoius window", font=(
                                       text="back", padx=10, pady=2,
                                       bg="#F45866", fg="#131117", font=("Arial", 25))
         activity_back_button.place(x=1500, y=40)
+
+        what_act = activity_options[r.randint(0, len(activity_options)-1)]
 
         if what_act == "cut lines":
 
@@ -234,7 +238,9 @@ character. To start the program, return to the prevoius window", font=(
         window = "cut lines 2"
         word_to_use = r.randint(0, len(word_list)-1)
         if len(word_list) == len(used_sentences):
-            program.destroy()
+            messagebox.showinfo(title=None, message="Congratulations for finishing an activity, "
+                                "moving to the next one...")
+            completed_activities.append()
 
         else:
             while word_to_use in used_sentences:
@@ -303,42 +309,48 @@ def write_to_lines(line_from_input_line, window):
             if not line_from_input_line.get().count(' ') == 1:
                 if not line_from_input_line.get()[-1] == ' ':
                     if line_from_input_line.get().count(' ') >= 3:
-                        file_line_input.append(line_from_input_line.get())
-                        print(file_line_input, "    file line input")
-                        with open("lines.txt", "a", encoding="utf-8") as file:
-                            file.write("Users line to learn:  " +
-                                       file_line_input[-1] + "\n")
-                        for letter in file_line_input[-1]:
-                            letter_list.append(letter)
-                        try:
-                            no_of_words = r.randint(
-                                1, letter_list.count(" ")-1)
+                        if not line_from_input_line.get()[0] == ' ':
+                            file_line_input.append(line_from_input_line.get())
+                            print(file_line_input, "    file line input")
+                            with open("lines.txt", "a", encoding="utf-8") as file:
+                                file.write("Users line to learn:  " +
+                                           file_line_input[-1] + "\n")
+                            for letter in file_line_input[-1]:
+                                letter_list.append(letter)
+                            try:
+                                no_of_words = r.randint(
+                                    1, letter_list.count(" ")-1)
 
-                            # cut the line into 2 sections
-                            for char in letter_list:
-                                if not no_of_words == 0:
-                                    if not char == ' ':
-                                        cut_line.append(char)
-                                    else:
-                                        no_of_words += -1
-                                        cut_line.append(char)
-                            str_cut_line = "".join(cut_line)
-                            line_cycle += 1
-                            word_list.append(str_cut_line)
-                            if line_cycle < difficulty+2:
-                                messagebox.showinfo(title=None,
-                                                    message=f"your line has been inputted, \
-please input {difficulty-line_cycle+2} more")
-                            else:
-                                messagebox.showinfo(title=None,
-                                                    message="your line has been inputted, \
-continuing to the second part of the activity...")
-                            print(word_list)
-                            open_window("activity window", window)
+                                # cut the line into 2 sections
+                                for char in letter_list:
+                                    if not no_of_words == 0:
+                                        if not char == ' ':
+                                            cut_line.append(char)
+                                        else:
+                                            no_of_words += -1
+                                            cut_line.append(char)
+                                str_cut_line = "".join(cut_line)
+                                line_cycle += 1
+                                word_list.append(str_cut_line)
+                                if line_cycle < difficulty+2:
+                                    messagebox.showinfo(title=None,
+                                                        message="your line has been inputted, "
+                                                        f"please input {difficulty-line_cycle+2} "
+                                                        "more")
+                                else:
+                                    messagebox.showinfo(title=None,
+                                                        message="your line has been inputted, "
+                                                        "continuing to the second part of the "
+                                                        "activity...")
+                                print(word_list)
+                                open_window("activity window", window)
 
-                        except ValueError:
+                            except ValueError:
+                                messagebox.showerror(
+                                    title=None, message="please add more words to practice")
+                        else:
                             messagebox.showerror(
-                                title=None, message="please add more words to practice")
+                                title=None, message="please remove spaces from infront of the line")
                     else:
                         messagebox.showerror(
                             title=None, message="please add more words to practice")
@@ -367,16 +379,15 @@ def check_correct_line(whole_line, currentwindow):
     else:
         messagebox.showwarning(
             title=None,
-            message=f"you inputted the line in wrong, \
-the whole line was:   {file_line_input[word_to_use]}")
+            message="you inputted the line in wrong, "
+            f"the whole line was:   {file_line_input[word_to_use]}")
     open_window("cut lines 2", currentwindow)
 
 
 def check_activity(selected_activities, window):
     """checks for both activity settings to have a selection and gives error message to user"""
-    if selected_activities[0] == "please select a \
-length of time" or selected_activities[1] == "please \
-select a difficulty":
+    if selected_activities[0] == "please select a length of time" or \
+            selected_activities[1] == "please select a difficulty":
         messagebox.showerror(
             title=None, message="please select a prep duration and difficulty")
     else:
