@@ -14,7 +14,7 @@ import random as r
 # purple #724E91
 # yellow #E8C04A
 
-# pylint: disable = E1111, E0601, W0601, W0621, C0103
+# pylint: disable = E1111, E0601, W0601, W0602, W0603, W0621, C0103
 
 # ctrl + f  "what_act"
 
@@ -35,6 +35,13 @@ activity_options_forlater = ["cut lines", "who is your character",
                              "emotion memory recall", "calming circle",
                              "info/tips", "water checkpoint"]
 calming_circle_options = ["colour breathing", "who is watching", ""]
+EMR_text = ["This is a drama technique: emotional memory recall.",
+            "This technique is used to make your facial expressions more realistic and believable.",
+            "This is an exercise which is reliant...",
+            "on you following these instructions to the best of your abilities.",
+            "Press the 'ready' button when you are ready to start the exercise",
+            "instructions here:"]
+
 cut_line = ""
 letter_list = []
 word_list = []
@@ -44,8 +51,9 @@ line_cycle = 0
 difficulty = 0
 prep_time = 0
 completed_activities = []
+EMR_text_num = 0
 
-activity_options = ["cut lines"]
+activity_options = ["emotion memory recall"]
 
 
 def closeprogram():
@@ -79,9 +87,17 @@ def clean_file():
             f.write("")
 
 
+def next_EMR_prompt():
+    global EMR_text_num, window
+    EMR_text_num += 1
+    print(window, "  - window")
+    open_window("activity window", window)
+    print(EMR_text_num)
+
+
 def open_window(new_window, old_window):
     """This fuction is called when a new window needs to be opened, and also closes the old one"""
-    global opening_frame, info_frame, start_frame, activity_frame, letter_list, line_cycle, cut_lines_2_gui, difficulty, prep_time, what_act, str_cut_line, file_line_input, word_list, used_sentences, word_to_use, completed_activities
+    global opening_frame, info_frame, start_frame, activity_frame, letter_list, line_cycle, cut_lines_2_gui, difficulty, prep_time, what_act, str_cut_line, file_line_input, word_list, used_sentences, word_to_use, completed_activities, EMR_text_num, EMR_gui
 
     if old_window == "opening window":
         opening_frame.destroy()
@@ -158,6 +174,7 @@ def open_window(new_window, old_window):
 
     elif new_window == "start screen":
         window = "start screen"
+
         letter_list = []
         word_list = []
         used_sentences = []
@@ -193,6 +210,7 @@ def open_window(new_window, old_window):
 
     elif new_window == "activity window":
         window = "activity window"
+
         letter_list = []
         used_sentences = []
         activity_frame = LabelFrame(
@@ -209,7 +227,7 @@ def open_window(new_window, old_window):
         if what_act == "cut lines":
 
             cut_line_gui = LabelFrame(
-                activity_frame, width=1200, height=800, bg="orange")
+                activity_frame, width=1200, height=800, bg="#DCA7C4")
             cut_line_gui.place(x=50, y=50)
 
             line_input_label = Label(
@@ -227,8 +245,15 @@ def open_window(new_window, old_window):
 
         # elif what_act == "who is your character":
         # code
-        # elif what_act == "emotion memory recall":
-        # code
+        elif what_act == "emotion memory recall":
+
+            EMR_instructions = Label(activity_frame, text=EMR_text[EMR_text_num], padx=10, pady=2,
+                                     bg="#E2B6CE", fg="#131117", font=("Arial", 25))
+            EMR_instructions.place(x=50, y=50)
+            EMR_next_button = Button(activity_frame, command=next_EMR_prompt, padx=10, pady=2,
+                                     bg="#E2B6CE", fg="#131117", font=("Arial", 25))
+            EMR_next_button.place(x=600, y=200)
+
         # elif what_act == "calming circle":
         #   circle_act =  randomizing code here
         # elif what_act == "info/tips":
@@ -359,7 +384,7 @@ def write_to_lines(line_from_input_line, window):
                         title=None, message="please do not end your input with a space")
             else:
                 messagebox.showerror(
-                    title=None, message="please enter multiple words into the entry field")
+                    title=None, message="please enter more words into the entry field")
         else:
             messagebox.showerror(
                 title=None, message="please enter multiple words into the entry field")
