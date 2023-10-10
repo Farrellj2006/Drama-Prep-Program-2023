@@ -88,10 +88,10 @@ def clean_file():
 
 
 def next_EMR_prompt():
-    global EMR_text_num, window
+    global EMR_text_num
     EMR_text_num += 1
     print(window, "  - window")
-    open_window("activity window", window)
+    open_window("activity window", "activity window")
     print(EMR_text_num)
 
 
@@ -246,6 +246,7 @@ def open_window(new_window, old_window):
         # elif what_act == "who is your character":
         # code
         elif what_act == "emotion memory recall":
+            window = "emotion memory recall"
 
             EMR_instructions = Label(activity_frame, text=EMR_text[EMR_text_num], padx=10, pady=2,
                                      bg="#E2B6CE", fg="#131117", font=("Arial", 25))
