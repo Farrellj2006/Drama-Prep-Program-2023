@@ -37,8 +37,8 @@ activity_options_forlater = ["cut lines", "who is your character",
 calming_circle_options = ["colour breathing", "who is watching", ""]
 EMR_text = ["This is a drama technique: emotional memory recall.",
             "This technique is used to make your facial expressions more realistic and believable.",
-            "This is an exercise which is reliant...",
-            "on you following these instructions to the best of your abilities.",
+            """This is an exercise which is reliant
+on you following these instructions to the best of your abilities.""",
             "Press the 'ready' button when you are ready to start the exercise",
             "instructions here:"]
 
@@ -53,7 +53,7 @@ prep_time = 0
 completed_activities = []
 EMR_text_num = 0
 
-activity_options = ["emotion memory recall"]
+activity_options = ["cut lines"]
 
 
 def closeprogram():
@@ -97,7 +97,7 @@ def next_EMR_prompt():
 
 def open_window(new_window, old_window):
     """This fuction is called when a new window needs to be opened, and also closes the old one"""
-    global opening_frame, info_frame, start_frame, activity_frame, letter_list, line_cycle, cut_lines_2_gui, difficulty, prep_time, what_act, str_cut_line, file_line_input, word_list, used_sentences, word_to_use, completed_activities, EMR_text_num, EMR_gui
+    global opening_frame, info_frame, start_frame, activity_frame, line_cycle, cut_lines_2_gui, difficulty, prep_time, what_act, str_cut_line, file_line_input, word_list, used_sentences, word_to_use, completed_activities, EMR_text_num
 
     if old_window == "opening window":
         opening_frame.destroy()
@@ -237,7 +237,7 @@ def open_window(new_window, old_window):
             line_input.place(x=200, y=50)
 
             recieve_line = Button(cut_line_gui, text="enter",
-                                  command=lambda: write_to_lines(line_input, window))
+                                  command=lambda: write_to_lines(line_input, window, letter_list))
             recieve_line.place(x=60, y=80)
 
             if line_cycle > difficulty+1:
@@ -248,12 +248,17 @@ def open_window(new_window, old_window):
         elif what_act == "emotion memory recall":
             window = "emotion memory recall"
 
-            EMR_instructions = Label(activity_frame, text=EMR_text[EMR_text_num], padx=10, pady=2,
-                                     bg="#E2B6CE", fg="#131117", font=("Arial", 25))
-            EMR_instructions.place(x=50, y=50)
-            EMR_next_button = Button(activity_frame, command=next_EMR_prompt, padx=10, pady=2,
-                                     bg="#E2B6CE", fg="#131117", font=("Arial", 25))
-            EMR_next_button.place(x=600, y=200)
+            try:
+                EMR_instructions = Label(activity_frame, text=EMR_text[EMR_text_num], padx=10, pady=2,
+                                         bg="#E2B6CE", fg="#131117", font=("Arial", 25))
+                EMR_instructions.place(x=50, y=50)
+
+                EMR_next_button = Button(activity_frame, command=next_EMR_prompt, padx=10, pady=2,
+                                         bg="#E2B6CE", fg="#131117", font=("Arial", 25))
+                EMR_next_button.place(x=600, y=200)
+
+            except IndexError:
+                program.destroy()  # :(     )
 
         # elif what_act == "calming circle":
         #   circle_act =  randomizing code here
@@ -323,7 +328,7 @@ def select_activity(i, window, activity_duration):
     open_window("start screen", window)
 
 
-def write_to_lines(line_from_input_line, window):
+def write_to_lines(line_from_input_line, window, letter_list):
     """Function to send lines to new line in file and make a var to compare with later"""
     global line_cycle, str_cut_line, file_line_input, word_list
     cut_line = []
@@ -392,6 +397,7 @@ def write_to_lines(line_from_input_line, window):
     else:
         messagebox.showerror(
             title=None, message="please do not type consecutive spaces")
+    return letter_list
 
 
 def check_correct_line(whole_line, currentwindow):
