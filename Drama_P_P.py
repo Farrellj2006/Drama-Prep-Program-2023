@@ -1,22 +1,29 @@
 """Drama_P_P 2023 - Jack Farrell"""
 
+
 from tkinter import Label, LabelFrame, Button, Tk, messagebox, Entry
 import random as r
 
+
 # L2 DISC Program 2023: Drama Prep
+
 
 # green #7CDF64
 # red #F45866
 # off-white #FDF3EC
 # off-black #131117
 
+
 # pink #E8C5D8
 # purple #724E91
 # yellow #E8C04A
 
+
 # pylint: disable = E1111, E0601, W0601, W0602, W0603, W0621, C0103
 
+
 # ctrl + f  "what_act"
+
 
 program = Tk()
 program.attributes('-fullscreen', True)
@@ -31,16 +38,29 @@ activity_duration_options = [
     ["#7CDF64", "#E8C04A", "#FF7F51", "green", "orange", "red"],
     [[140, 140], [100, 260], [140, 380], [340, 140], [320, 260], [340, 380]]]
 
+
 activity_options_forlater = ["cut lines", "who is your character",
                              "emotion memory recall", "calming circle",
                              "info/tips", "water checkpoint"]
+
+
 calming_circle_options = ["colour breathing", "who is watching", ""]
-EMR_text = ["This is a drama technique: emotional memory recall.",
+
+
+EMR_text = ["This is a drama technique: emotion memory recall.",
             "This technique is used to make your facial expressions more realistic and believable.",
             """This is an exercise which is reliant
 on you following these instructions to the best of your abilities.""",
             "Press the 'ready' button when you are ready to start the exercise",
-            "instructions here:"]
+            "Lets start with something simple what you need to do is imagine an emotion",
+            "example: anger",
+            "then try to remember a memory where you have felt this emotion.",
+            "Now you must make your: face, body, and mind look and think like they did in "
+            "that memory.",
+            "Allow those emotions to be your full focus",
+            "this is what you must do before going on-stage in character",
+            "you must visualise your characters emotions and relate them to a personal experience"]
+
 
 cut_line = ""
 letter_list = []
@@ -53,7 +73,11 @@ prep_time = 0
 completed_activities = []
 EMR_text_num = 0
 
-activity_options = ["cut lines"]
+
+activity_options = ["emotion memory recall"]
+
+
+what_act = activity_options[r.randint(0, len(activity_options)-1)]
 
 
 def closeprogram():
@@ -95,9 +119,13 @@ def next_EMR_prompt():
     print(EMR_text_num)
 
 
+def next_activity():
+    program.destroy()
+
+
 def open_window(new_window, old_window):
     """This fuction is called when a new window needs to be opened, and also closes the old one"""
-    global opening_frame, info_frame, start_frame, activity_frame, line_cycle, cut_lines_2_gui, difficulty, prep_time, what_act, str_cut_line, file_line_input, word_list, used_sentences, word_to_use, completed_activities, EMR_text_num
+    global opening_frame, info_frame, start_frame, activity_frame, line_cycle, cut_line_gui, difficulty, prep_time, what_act, str_cut_line, file_line_input, word_list, used_sentences, word_to_use, completed_activities, EMR_text_num
 
     if old_window == "opening window":
         opening_frame.destroy()
@@ -107,8 +135,6 @@ def open_window(new_window, old_window):
         start_frame.destroy()
     elif old_window == "activity window":
         activity_frame.destroy()
-    elif old_window == "cut lines 2":
-        cut_lines_2_gui.destroy()
 
     if new_window == "opening window":
         window = new_window
@@ -211,8 +237,6 @@ def open_window(new_window, old_window):
     elif new_window == "activity window":
         window = "activity window"
 
-        letter_list = []
-        used_sentences = []
         activity_frame = LabelFrame(
             program, width=1720, height=900, bg="#E2B6CE")
         activity_frame.pack(anchor="nw")
@@ -222,9 +246,9 @@ def open_window(new_window, old_window):
                                       bg="#F45866", fg="#131117", font=("Arial", 25))
         activity_back_button.place(x=1500, y=40)
 
-        what_act = activity_options[r.randint(0, len(activity_options)-1)]
-
         if what_act == "cut lines":
+            used_sentences = []
+            letter_list = []
 
             cut_line_gui = LabelFrame(
                 activity_frame, width=1200, height=800, bg="#DCA7C4")
@@ -241,7 +265,46 @@ def open_window(new_window, old_window):
             recieve_line.place(x=60, y=80)
 
             if line_cycle > difficulty+1:
-                open_window("cut lines 2", window)
+                what_act = "cut lines 2"
+                open_window("activity window", window)
+
+        elif what_act == "cut lines 2":
+
+            cut_line_gui = LabelFrame(
+                activity_frame, width=1200, height=800, bg="#DCA7C4")
+            cut_line_gui.place(x=50, y=50)
+
+            word_to_use = r.randint(0, len(word_list)-1)
+            if len(word_list) == len(used_sentences):
+                messagebox.showinfo(
+                    title=None, message="Activity complete. Moving to the next one... ")
+                next_activity()
+            else:
+                while word_to_use in used_sentences:
+                    word_to_use = r.randint(0, (len(word_list)-1))
+
+                print(word_list, "   word list")
+                print(used_sentences, "   used sentences")
+                print(word_to_use, "    word to use")
+                used_sentences.append(word_to_use)
+
+                cut_lines_2_back_button = Button(cut_line_gui,
+                                                 command=lambda: close_activity(
+                                                     window),
+                                                 text="back", padx=10, pady=2,
+                                                 bg="#F45866", fg="#131117",
+                                                 font=("Arial", 25))
+                cut_lines_2_back_button.place(x=1500, y=40)
+                line_piece = Label(cut_line_gui,
+                                   text=f"Please enter the rest of this line: "
+                                   f"{word_list[word_to_use]}")
+                line_piece.place(x=50, y=300)
+                line_piece_input = Entry(cut_line_gui, width=100, bg="white")
+                line_piece_input.place(x=400, y=300)
+                whole_line_input = Button(cut_line_gui, text="enter",
+                                          command=lambda:
+                                          check_correct_line(line_piece_input.get(), window))
+                whole_line_input.place(x=60, y=80)
 
         # elif what_act == "who is your character":
         # code
@@ -249,8 +312,9 @@ def open_window(new_window, old_window):
             window = "emotion memory recall"
 
             try:
-                EMR_instructions = Label(activity_frame, text=EMR_text[EMR_text_num], padx=10, pady=2,
-                                         bg="#E2B6CE", fg="#131117", font=("Arial", 25))
+                EMR_instructions = Label(activity_frame, text=EMR_text[EMR_text_num],
+                                         padx=10, pady=2, bg="#E2B6CE", fg="#131117",
+                                         font=("Arial", 25))
                 EMR_instructions.place(x=50, y=50)
 
                 EMR_next_button = Button(activity_frame, command=next_EMR_prompt, padx=10, pady=2,
@@ -258,47 +322,12 @@ def open_window(new_window, old_window):
                 EMR_next_button.place(x=600, y=200)
 
             except IndexError:
-                program.destroy()  # to be updated
+                next_activity()
 
         # elif what_act == "calming circle":
         #   circle_act =  randomizing code here
         # elif what_act == "info/tips":
         # code
-
-    elif new_window == "cut lines 2":
-        window = "cut lines 2"
-        word_to_use = r.randint(0, len(word_list)-1)
-        if len(word_list) == len(used_sentences):
-            messagebox.showinfo(title=None, message="Congratulations for finishing an activity, "
-                                "moving to the next one...")
-        else:
-            while word_to_use in used_sentences:
-                word_to_use = r.randint(0, (len(word_list)-1))
-
-            print(word_list, "   word list")
-            print(used_sentences, "   used sentences")
-            print(word_to_use, "    word to use")
-            used_sentences.append(word_to_use)
-
-            cut_lines_2_gui = LabelFrame(
-                program, width=1720, height=900, bg="#E2B6CE")
-            cut_lines_2_gui.pack(anchor="nw")
-            cut_lines_2_back_button = Button(cut_lines_2_gui,
-                                             command=lambda: close_activity(
-                                                 window),
-                                             text="back", padx=10, pady=2,
-                                             bg="#F45866", fg="#131117",
-                                             font=("Arial", 25))
-            cut_lines_2_back_button.place(x=1500, y=40)
-            line_piece = Label(cut_lines_2_gui,
-                               text=f"Please enter the rest of this line: {word_list[word_to_use]}")
-            line_piece.place(x=50, y=300)
-            line_piece_input = Entry(cut_lines_2_gui, width=100, bg="white")
-            line_piece_input.place(x=400, y=300)
-            whole_line_input = Button(cut_lines_2_gui, text="enter",
-                                      command=lambda:
-                                      check_correct_line(line_piece_input.get(), window))
-            whole_line_input.place(x=60, y=80)
 
 
 def select_activity(i, window, activity_duration):
@@ -368,7 +397,8 @@ def write_to_lines(line_from_input_line, window, letter_list):
                                     if line_cycle < difficulty+2:
                                         messagebox.showinfo(title=None,
                                                             message="your line has been inputted, "
-                                                            f"please input {difficulty-line_cycle+2} "
+                                                            "please input "
+                                                            f"{difficulty-line_cycle+2} "
                                                             "more")
                                     else:
                                         messagebox.showinfo(title=None,
@@ -409,47 +439,31 @@ def write_to_lines(line_from_input_line, window, letter_list):
 def check_correct_line(whole_line, currentwindow):
     """checks if the user has inputted the correct line into the entry field"""
     global file_line_input, word_to_use
-    print(whole_line, " - whole line")
-#    print("comparing:  ", str(
-#        word_list[word_to_use] + whole_line), "   to    ", file_line_input[word_to_use])
-#    if str(word_list[word_to_use] + whole_line) == file_line_input[word_to_use]:
-#        messagebox.showinfo(
-#            title=None, message="you inputted the line in correctly!")
-#    else:
-#        messagebox.showwarning(
-#            title=None,
-#            message="you inputted the line in wrong, "
-#            f"the whole line was:   {file_line_input[word_to_use]}")
-#    open_window("cut lines 2", currentwindow)
+
     if not whole_line.count('  ') >= 1:
         if not whole_line.count('') == 1:
-            if not whole_line.count(' ') == 1:
-                if not whole_line[-1] == ' ':
-                    if not whole_line[0] == ' ':
+            if not whole_line[-1] == ' ':
+                if not whole_line[0] == ' ':
 
-                        print("comparing:  ", str(
-                            word_list[word_to_use] + whole_line), "   to    ", file_line_input[word_to_use])
+                    # print("comparing:  ", str(word_list[word_to_use] + whole_line),"   to    ", file_line_input[word_to_use])
 
-                        if str(word_list[word_to_use] + whole_line) == file_line_input[word_to_use]:
-                            messagebox.showinfo(
-                                title=None, message="you inputted the line in correctly!")
-                        else:
-                            messagebox.showwarning(
-                                title=None,
-                                message="you inputted the line in wrong, "
-                                f"the whole line was:   {file_line_input[word_to_use]}")
-
-                        open_window("cut lines 2", currentwindow)
-
+                    if str(word_list[word_to_use] + whole_line) == file_line_input[word_to_use]:
+                        messagebox.showinfo(
+                            title=None, message="you inputted the line in correctly!")
                     else:
-                        messagebox.showerror(
-                            title=None, message="please remove spaces from infront of the line")
+                        messagebox.showwarning(
+                            title=None,
+                            message="you inputted the line in wrong, "
+                            f"the whole line was:   {file_line_input[word_to_use]}")
+
+                    open_window("activity window", currentwindow)
+
                 else:
                     messagebox.showerror(
-                        title=None, message="please do not end your input with a space")
+                        title=None, message="please remove spaces from infront of the line")
             else:
                 messagebox.showerror(
-                    title=None, message="please enter more words into the entry field")
+                    title=None, message="please do not end your input with a space")
         else:
             messagebox.showerror(
                 title=None, message="please enter multiple words into the entry field")
