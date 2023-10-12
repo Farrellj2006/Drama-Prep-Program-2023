@@ -258,7 +258,7 @@ def open_window(new_window, old_window):
                 EMR_next_button.place(x=600, y=200)
 
             except IndexError:
-                program.destroy()  # :(     )
+                program.destroy()  # to be updated
 
         # elif what_act == "calming circle":
         #   circle_act =  randomizing code here
@@ -271,8 +271,6 @@ def open_window(new_window, old_window):
         if len(word_list) == len(used_sentences):
             messagebox.showinfo(title=None, message="Congratulations for finishing an activity, "
                                 "moving to the next one...")
-            completed_activities.append()
-
         else:
             while word_to_use in used_sentences:
                 word_to_use = r.randint(0, (len(word_list)-1))
@@ -334,6 +332,7 @@ def write_to_lines(line_from_input_line, window, letter_list):
     cut_line = []
     str_cut_line = ""
 
+
 # code to filter out incorrect inputs
     if not line_from_input_line.get().count('  ') >= 1:
         if not line_from_input_line.get().count('') == 1:
@@ -341,44 +340,51 @@ def write_to_lines(line_from_input_line, window, letter_list):
                 if not line_from_input_line.get()[-1] == ' ':
                     if line_from_input_line.get().count(' ') >= 3:
                         if not line_from_input_line.get()[0] == ' ':
-                            file_line_input.append(line_from_input_line.get())
-                            print(file_line_input, "    file line input")
-                            with open("lines.txt", "a", encoding="utf-8") as file:
-                                file.write("Users line to learn:  " +
-                                           file_line_input[-1] + "\n")
-                            for letter in file_line_input[-1]:
-                                letter_list.append(letter)
-                            try:
-                                no_of_words = r.randint(
-                                    1, letter_list.count(" ")-1)
+                            if not line_from_input_line.get() in file_line_input:
 
-                                # cut the line into 2 sections
-                                for char in letter_list:
-                                    if not no_of_words == 0:
-                                        if not char == ' ':
-                                            cut_line.append(char)
-                                        else:
-                                            no_of_words += -1
-                                            cut_line.append(char)
-                                str_cut_line = "".join(cut_line)
-                                line_cycle += 1
-                                word_list.append(str_cut_line)
-                                if line_cycle < difficulty+2:
-                                    messagebox.showinfo(title=None,
-                                                        message="your line has been inputted, "
-                                                        f"please input {difficulty-line_cycle+2} "
-                                                        "more")
-                                else:
-                                    messagebox.showinfo(title=None,
-                                                        message="your line has been inputted, "
-                                                        "continuing to the second part of the "
-                                                        "activity...")
-                                print(word_list)
-                                open_window("activity window", window)
+                                file_line_input.append(
+                                    line_from_input_line.get())
+                                print(file_line_input, "    file line input")
+                                with open("lines.txt", "a", encoding="utf-8") as file:
+                                    file.write("Users line to learn:  " +
+                                               file_line_input[-1] + "\n")
+                                for letter in file_line_input[-1]:
+                                    letter_list.append(letter)
+                                try:
+                                    no_of_words = r.randint(
+                                        1, letter_list.count(" ")-1)
 
-                            except ValueError:
+                                    # cut the line into 2 sections
+                                    for char in letter_list:
+                                        if not no_of_words == 0:
+                                            if not char == ' ':
+                                                cut_line.append(char)
+                                            else:
+                                                no_of_words += -1
+                                                cut_line.append(char)
+                                    str_cut_line = "".join(cut_line)
+                                    line_cycle += 1
+                                    word_list.append(str_cut_line)
+                                    if line_cycle < difficulty+2:
+                                        messagebox.showinfo(title=None,
+                                                            message="your line has been inputted, "
+                                                            f"please input {difficulty-line_cycle+2} "
+                                                            "more")
+                                    else:
+                                        messagebox.showinfo(title=None,
+                                                            message="your line has been inputted, "
+                                                            "continuing to the second part of the "
+                                                            "activity...")
+                                    print(word_list)
+                                    open_window("activity window", window)
+
+                                except ValueError:
+                                    messagebox.showerror(
+                                        title=None, message="please add more words to practice")
+                            else:
                                 messagebox.showerror(
-                                    title=None, message="please add more words to practice")
+                                    title=None, message="please input a line different to a "
+                                                        "previous one")
                         else:
                             messagebox.showerror(
                                 title=None, message="please remove spaces from infront of the line")
@@ -403,17 +409,53 @@ def write_to_lines(line_from_input_line, window, letter_list):
 def check_correct_line(whole_line, currentwindow):
     """checks if the user has inputted the correct line into the entry field"""
     global file_line_input, word_to_use
-    print("comparing:  ", str(
-        word_list[word_to_use] + whole_line), "   to    ", file_line_input[word_to_use])
-    if str(word_list[word_to_use] + whole_line) == file_line_input[word_to_use]:
-        messagebox.showinfo(
-            title=None, message="you inputted the line in correctly!")
+    print(whole_line, " - whole line")
+#    print("comparing:  ", str(
+#        word_list[word_to_use] + whole_line), "   to    ", file_line_input[word_to_use])
+#    if str(word_list[word_to_use] + whole_line) == file_line_input[word_to_use]:
+#        messagebox.showinfo(
+#            title=None, message="you inputted the line in correctly!")
+#    else:
+#        messagebox.showwarning(
+#            title=None,
+#            message="you inputted the line in wrong, "
+#            f"the whole line was:   {file_line_input[word_to_use]}")
+#    open_window("cut lines 2", currentwindow)
+    if not whole_line.count('  ') >= 1:
+        if not whole_line.count('') == 1:
+            if not whole_line.count(' ') == 1:
+                if not whole_line[-1] == ' ':
+                    if not whole_line[0] == ' ':
+
+                        print("comparing:  ", str(
+                            word_list[word_to_use] + whole_line), "   to    ", file_line_input[word_to_use])
+
+                        if str(word_list[word_to_use] + whole_line) == file_line_input[word_to_use]:
+                            messagebox.showinfo(
+                                title=None, message="you inputted the line in correctly!")
+                        else:
+                            messagebox.showwarning(
+                                title=None,
+                                message="you inputted the line in wrong, "
+                                f"the whole line was:   {file_line_input[word_to_use]}")
+
+                        open_window("cut lines 2", currentwindow)
+
+                    else:
+                        messagebox.showerror(
+                            title=None, message="please remove spaces from infront of the line")
+                else:
+                    messagebox.showerror(
+                        title=None, message="please do not end your input with a space")
+            else:
+                messagebox.showerror(
+                    title=None, message="please enter more words into the entry field")
+        else:
+            messagebox.showerror(
+                title=None, message="please enter multiple words into the entry field")
     else:
-        messagebox.showwarning(
-            title=None,
-            message="you inputted the line in wrong, "
-            f"the whole line was:   {file_line_input[word_to_use]}")
-    open_window("cut lines 2", currentwindow)
+        messagebox.showerror(
+            title=None, message="please do not type consecutive spaces")
 
 
 def check_activity(selected_activities, window):
