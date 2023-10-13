@@ -59,7 +59,9 @@ on you following these instructions to the best of your abilities.""",
             "that memory.",
             "Allow those emotions to be your full focus",
             "this is what you must do before going on-stage in character",
-            "you must visualise your characters emotions and relate them to a personal experience"]
+            "you must visualise your characters emotions and relate them to a personal experience.",
+            "Lets do this a couple more times, but with a different emotion or feeling",
+            "When you are ready to leave this activity, press the NEXT button."]
 
 
 cut_line = ""
@@ -72,7 +74,7 @@ difficulty = 0
 prep_time = 0
 completed_activities = []
 EMR_text_num = 0
-
+EMR_round = 0
 
 activity_options = ["emotion memory recall"]
 
@@ -112,11 +114,17 @@ def clean_file():
 
 
 def next_EMR_prompt():
-    global EMR_text_num
-    EMR_text_num += 1
-    print(window, "  - window")
+    global EMR_text_num, EMR_round, prep_time
+
+    if EMR_round > prep_time:
+        next_activity()
+
+    EMR_round += 1
+    if EMR_text_num == 11:
+        EMR_text_num = 0
+    else:
+        EMR_text_num += 1
     open_window("activity window", "activity window")
-    print(EMR_text_num)
 
 
 def next_activity():
@@ -125,7 +133,7 @@ def next_activity():
 
 def open_window(new_window, old_window):
     """This fuction is called when a new window needs to be opened, and also closes the old one"""
-    global opening_frame, info_frame, start_frame, activity_frame, line_cycle, cut_line_gui, difficulty, prep_time, what_act, str_cut_line, file_line_input, word_list, used_sentences, word_to_use, completed_activities, EMR_text_num
+    global opening_frame, info_frame, start_frame, activity_frame, line_cycle, cut_line_gui, difficulty, prep_time, what_act, str_cut_line, file_line_input, word_list, used_sentences, word_to_use, completed_activities, EMR_text_num, EMR_round
 
     if old_window == "opening window":
         opening_frame.destroy()
@@ -205,6 +213,8 @@ def open_window(new_window, old_window):
         word_list = []
         used_sentences = []
         file_line_input = []
+        EMR_round = 0
+
         start_frame = LabelFrame(
             program, width=1720, height=900, bg="#E2B6CE")
         start_frame.pack(anchor="nw")
@@ -318,7 +328,8 @@ def open_window(new_window, old_window):
                 EMR_instructions.place(x=50, y=50)
 
                 EMR_next_button = Button(activity_frame, command=next_EMR_prompt, padx=10, pady=2,
-                                         bg="#E2B6CE", fg="#131117", font=("Arial", 25))
+                                         bg="#E2B6CE", fg="#131117", text="Next",
+                                         font=("Arial", 25))
                 EMR_next_button.place(x=600, y=200)
 
             except IndexError:
