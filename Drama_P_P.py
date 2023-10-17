@@ -39,12 +39,8 @@ activity_duration_options = [
     [[140, 140], [100, 260], [140, 380], [340, 140], [320, 260], [340, 380]]]
 
 
-activity_options_forlater = ["cut lines", "who is your character",
-                             "emotion memory recall", "calming circle",
-                             "info/tips", "water checkpoint"]
-
-
-calming_circle_options = ["colour breathing", "who is watching", ""]
+activity_options_forlater = [
+    "cut lines", "emotion memory recall", "who is your character + tips"]
 
 
 EMR_text = ["This is a drama technique: emotion memory recall.",
@@ -52,7 +48,8 @@ EMR_text = ["This is a drama technique: emotion memory recall.",
             """This is an exercise which is reliant
 on you following these instructions to the best of your abilities.""",
             "Press the 'ready' button when you are ready to start the exercise",
-            "Lets start with something simple what you need to do is imagine an emotion",
+            "Lets start with something simple",
+            "what you need to do is imagine an emotion",
             "example: anger",
             "then try to remember a memory where you have felt this emotion.",
             "Now you must make your: face, body, and mind look and think like they did in "
@@ -78,8 +75,7 @@ EMR_round = 0
 
 activity_options = ["emotion memory recall"]
 
-
-what_act = activity_options[r.randint(0, len(activity_options)-1)]
+what_act = activity_options[0]
 
 
 def closeprogram():
@@ -116,14 +112,20 @@ def clean_file():
 def next_EMR_prompt():
     global EMR_text_num, EMR_round, prep_time
 
+    # broken code, redo this
+
+    if EMR_text_num == len(EMR_text)-3 and EMR_round > prep_time - 1:
+        EMR_text_num = len(EMR_text)-1
+
+    if EMR_text_num == len(EMR_text)-2:
+        EMR_text_num = 5
+        EMR_round += 1
+    else:
+        EMR_text_num += 1
+
     if EMR_round > prep_time:
         next_activity()
 
-    EMR_round += 1
-    if EMR_text_num == 11:
-        EMR_text_num = 0
-    else:
-        EMR_text_num += 1
     open_window("activity window", "activity window")
 
 
@@ -316,8 +318,6 @@ def open_window(new_window, old_window):
                                           check_correct_line(line_piece_input.get(), window))
                 whole_line_input.place(x=60, y=80)
 
-        # elif what_act == "who is your character":
-        # code
         elif what_act == "emotion memory recall":
             window = "emotion memory recall"
 
@@ -335,8 +335,6 @@ def open_window(new_window, old_window):
             except IndexError:
                 next_activity()
 
-        # elif what_act == "calming circle":
-        #   circle_act =  randomizing code here
         # elif what_act == "info/tips":
         # code
 
@@ -373,7 +371,7 @@ def write_to_lines(line_from_input_line, window, letter_list):
     str_cut_line = ""
 
 
-# code to filter out incorrect inputs
+# code to filter out incorrect inputs and provide user feedback based on what they did wrong
     if not line_from_input_line.get().count('  ') >= 1:
         if not line_from_input_line.get().count('') == 1:
             if not line_from_input_line.get().count(' ') == 1:
@@ -455,8 +453,6 @@ def check_correct_line(whole_line, currentwindow):
         if not whole_line.count('') == 1:
             if not whole_line[-1] == ' ':
                 if not whole_line[0] == ' ':
-
-                    # print("comparing:  ", str(word_list[word_to_use] + whole_line),"   to    ", file_line_input[word_to_use])
 
                     if str(word_list[word_to_use] + whole_line) == file_line_input[word_to_use]:
                         messagebox.showinfo(
