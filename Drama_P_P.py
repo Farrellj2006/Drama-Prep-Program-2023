@@ -39,12 +39,12 @@ activity_duration_options = [
     [[140, 140], [100, 260], [140, 380], [340, 140], [320, 260], [340, 380]]]
 
 
-activity_options_forlater = [
-    "cut lines", "emotion memory recall", "who is your character + tips"]
+activity_options = [
+    "cut lines", "cut lines 2", "emotion memory recall", "info/tips"]
 
 
 EMR_text = ["This is a drama technique: emotion memory recall.",
-            "This technique is used to make your facial expressions more realistic and believable.",
+            "This technique is used to make your facial expressions more realistic and believable. ",
             """This is an exercise which is reliant
 on you following these instructions to the best of your abilities.""",
             "Press the 'ready' button when you are ready to start the exercise",
@@ -60,28 +60,40 @@ on you following these instructions to the best of your abilities.""",
             "Lets do this a couple more times, but with a different emotion or feeling",
             "When you are ready to leave this activity, press the NEXT button."]
 
+what_act_tips_text = ["These are some final useful tips that will help you in drama performances",
+                      "ARRIVE TO THE VENUE ON TIME, this is majorly important",
+                      "Make sure to drink plenty of water before a performance",
+                      "Always do a vocal warmup for a musical 5-10 minutes before the show",
+                      "Physically be prepared for your performance. Stretch!",
+                      "make sure to use other warmup methods, which can be found online, alongside this program for the maximum benefits :D"]
 
+
+# constants, these are not to be modified, the code manipulates these viariables
 cut_line = ""
 letter_list = []
 word_list = []
 used_sentences = []
 file_line_input = []
+completed_activities = []
 line_cycle = 0
 difficulty = 0
 prep_time = 0
-completed_activities = []
 EMR_text_num = 0
 EMR_round = 0
+actnum = 0
+what_act_tips_text_num = 0
+what_act = ""
 
-activity_options = ["emotion memory recall"]
+# variables
 
-what_act = activity_options[0]
+# how many activities are in the program
+max_num_of_act = 3
 
 
 def closeprogram():
     """This function confirms to close the program when run"""
     quit_conformation = messagebox.askquestion(
-        "Exit Confirmation", "are you sure you want to exit?")
+        "Exit Confirmation", "are you sure you want to exit the program?")
     if quit_conformation == "yes":
         program.destroy()
 
@@ -94,7 +106,7 @@ exit_button.place(x=1775, y=40)
 def close_activity(currentwindow):
     """This function confirms wether the user wants to exit the drama prep"""
     quit_conformation = messagebox.askquestion(
-        "Exit Confirmation", "are you sure you want to exit? You will not be able to continue")
+        "Exit Confirmation", "are you sure you want to go back? You will not be able to continue")
     if quit_conformation == "yes":
         open_window("start screen", currentwindow)
 
@@ -110,10 +122,10 @@ def clean_file():
 
 
 def next_EMR_prompt():
+    """Go to the next EMR prompt"""
     global EMR_text_num, EMR_round, prep_time
 
-    # broken code, redo this
-
+    print(prep_time, " : prep time", EMR_round, " : EMR_round")
     if EMR_text_num == len(EMR_text)-3 and EMR_round > prep_time - 1:
         EMR_text_num = len(EMR_text)-1
 
@@ -129,13 +141,35 @@ def next_EMR_prompt():
     open_window("activity window", "activity window")
 
 
+def next_tips_prompt():
+    """Go to the next tips prompt"""
+    global what_act_tips_text_num
+    if what_act_tips_text_num == len(what_act_tips_text)-1:
+        if actnum == max_num_of_act:
+            program.destroy()  # end program nicely
+
+        else:
+            what_act_tips_text_num += 1
+            open_window("activity window", "activity window")
+
+    else:
+        what_act_tips_text_num += 1
+        open_window("activity window", "activity window")
+
+
 def next_activity():
-    program.destroy()
+    """takes the user to the next activity"""
+    global actnum
+    actnum += 1
+    if actnum > max_num_of_act:
+        program.destroy()
+    else:
+        pass  # do code to go to next activity
 
 
 def open_window(new_window, old_window):
     """This fuction is called when a new window needs to be opened, and also closes the old one"""
-    global opening_frame, info_frame, start_frame, activity_frame, line_cycle, cut_line_gui, difficulty, prep_time, what_act, str_cut_line, file_line_input, word_list, used_sentences, word_to_use, completed_activities, EMR_text_num, EMR_round
+    global opening_frame, info_frame, start_frame, activity_frame, line_cycle, cut_line_gui, difficulty, prep_time, what_act, str_cut_line, file_line_input, word_list, used_sentences, word_to_use, completed_activities, EMR_text_num, EMR_round, max_num_of_act, actnum
 
     if old_window == "opening window":
         opening_frame.destroy()
@@ -216,6 +250,8 @@ def open_window(new_window, old_window):
         used_sentences = []
         file_line_input = []
         EMR_round = 0
+        EMR_text_num = 0
+        actnum = 0
 
         start_frame = LabelFrame(
             program, width=1720, height=900, bg="#E2B6CE")
@@ -257,6 +293,8 @@ def open_window(new_window, old_window):
                                       text="back", padx=10, pady=2,
                                       bg="#F45866", fg="#131117", font=("Arial", 25))
         activity_back_button.place(x=1500, y=40)
+
+        what_act = activity_options[actnum]
 
         if what_act == "cut lines":
             used_sentences = []
@@ -335,8 +373,16 @@ def open_window(new_window, old_window):
             except IndexError:
                 next_activity()
 
-        # elif what_act == "info/tips":
-        # code
+        elif what_act == "info/tips":
+            what_act_tips = Label(activity_frame, text=what_act_tips_text[what_act_tips_text_num],
+                                  padx=10, pady=2, bg="#E2B6CE", fg="#131117",
+                                  font=("Arial", 25))
+            what_act_tips.place(x=50, y=50)
+
+            what_act_tips_next_button = Button(activity_frame, command=next_tips_prompt, padx=10, pady=2,
+                                               bg="#E2B6CE", fg="#131117", text="Next",
+                                               font=("Arial", 25))
+            what_act_tips_next_button.place(x=600, y=200)
 
 
 def select_activity(i, window, activity_duration):
