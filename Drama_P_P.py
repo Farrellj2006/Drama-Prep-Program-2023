@@ -40,7 +40,7 @@ activity_duration_options = [
 
 
 activity_options = [
-    "cut lines", "cut lines 2", "emotion memory recall", "info/tips"]
+    "cut lines", "emotion memory recall", "info/tips"]
 
 
 EMR_text = ["This is a drama technique: emotion memory recall.",
@@ -59,6 +59,7 @@ on you following these instructions to the best of your abilities.""",
             "you must visualise your characters emotions and relate them to a personal experience.",
             "Lets do this a couple more times, but with a different emotion or feeling",
             "When you are ready to leave this activity, press the NEXT button."]
+
 
 what_act_tips_text = ["These are some final useful tips that will help you in drama performances",
                       "ARRIVE TO THE VENUE ON TIME, this is majorly important",
@@ -84,7 +85,9 @@ actnum = 0
 what_act_tips_text_num = 0
 what_act = ""
 
+
 # variables
+
 
 # how many activities are in the program
 max_num_of_act = 3
@@ -99,14 +102,16 @@ def closeprogram():
 
 
 exit_button = Button(program, command=closeprogram, text="exit",
-                     padx=10, pady=2, bg="#F45866", fg="#131117", font=("Arial", 25))
+                     padx=10, pady=2, bg="#F45866", fg="#131117",
+                     font=("Arial", 25))
 exit_button.place(x=1775, y=40)
 
 
 def close_activity(currentwindow):
     """This function confirms wether the user wants to exit the drama prep"""
     quit_conformation = messagebox.askquestion(
-        "Exit Confirmation", "are you sure you want to go back? You will not be able to continue")
+        "Exit Confirmation",
+        "are you sure you want to go back? You will not be able to continue")
     if quit_conformation == "yes":
         open_window("start screen", currentwindow)
 
@@ -164,7 +169,9 @@ def next_activity():
     if actnum > max_num_of_act:
         program.destroy()
     else:
-        pass  # do code to go to next activity
+        # broken code starts
+        open_window("activity window", "activity window")
+        # broken code ends
 
 
 def open_window(new_window, old_window):
@@ -283,7 +290,10 @@ def open_window(new_window, old_window):
         continue_to_prep_button.place(x=600, y=400)
 
     elif new_window == "activity window":
+        letter_list = []
         window = "activity window"
+        what_act = activity_options[actnum]
+        print(what_act)
 
         activity_frame = LabelFrame(
             program, width=1720, height=900, bg="#E2B6CE")
@@ -294,11 +304,7 @@ def open_window(new_window, old_window):
                                       bg="#F45866", fg="#131117", font=("Arial", 25))
         activity_back_button.place(x=1500, y=40)
 
-        what_act = activity_options[actnum]
-
         if what_act == "cut lines":
-            used_sentences = []
-            letter_list = []
 
             cut_line_gui = LabelFrame(
                 activity_frame, width=1200, height=800, bg="#DCA7C4")
@@ -315,74 +321,74 @@ def open_window(new_window, old_window):
             recieve_line.place(x=60, y=80)
 
             if line_cycle > difficulty+1:
-                what_act = "cut lines 2"
-                open_window("activity window", window)
+                # cut lines 2
 
-        elif what_act == "cut lines 2":
+                cut_line_gui.destroy()
 
-            cut_line_gui = LabelFrame(
-                activity_frame, width=1200, height=800, bg="#DCA7C4")
-            cut_line_gui.place(x=50, y=50)
+                cut_line_gui = LabelFrame(
+                    activity_frame, width=1200, height=800, bg="#DCA7C4")
+                cut_line_gui.place(x=50, y=50)
 
-            word_to_use = r.randint(0, len(word_list)-1)
-            if len(word_list) == len(used_sentences):
-                messagebox.showinfo(
-                    title=None, message="Activity complete. Moving to the next one... ")
-                next_activity()
-            else:
-                while word_to_use in used_sentences:
-                    word_to_use = r.randint(0, (len(word_list)-1))
+                word_to_use = r.randint(0, len(word_list)-1)
+                if len(word_list) == len(used_sentences):
+                    messagebox.showinfo(
+                        title=None, message="Activity complete. Moving to the next one... ")
+                    next_activity()
+                else:
+                    while word_to_use in used_sentences:
+                        word_to_use = r.randint(0, (len(word_list)-1))
 
-                print(word_list, "   word list")
-                print(used_sentences, "   used sentences")
-                print(word_to_use, "    word to use")
-                used_sentences.append(word_to_use)
+                    print(word_list, "   word list")
+                    print(used_sentences, "   used sentences")
+                    print(word_to_use, "    word to use")
+                    used_sentences.append(word_to_use)
 
-                cut_lines_2_back_button = Button(cut_line_gui,
-                                                 command=lambda: close_activity(
-                                                     window),
-                                                 text="back", padx=10, pady=2,
-                                                 bg="#F45866", fg="#131117",
-                                                 font=("Arial", 25))
-                cut_lines_2_back_button.place(x=1500, y=40)
-                line_piece = Label(cut_line_gui,
-                                   text=f"Please enter the rest of this line: "
-                                   f"{word_list[word_to_use]}")
-                line_piece.place(x=50, y=300)
-                line_piece_input = Entry(cut_line_gui, width=100, bg="white")
-                line_piece_input.place(x=400, y=300)
-                whole_line_input = Button(cut_line_gui, text="enter",
-                                          command=lambda:
-                                          check_correct_line(line_piece_input.get(), window))
-                whole_line_input.place(x=60, y=80)
+                    cut_lines_2_back_button = Button(cut_line_gui,
+                                                     command=lambda: close_activity(
+                                                         window),
+                                                     text="back", padx=10, pady=2,
+                                                     bg="#F45866", fg="#131117",
+                                                     font=("Arial", 25))
+                    cut_lines_2_back_button.place(x=1500, y=40)
+                    line_piece = Label(cut_line_gui,
+                                       text=f"Please enter the rest of this line: "
+                                       f"{word_list[word_to_use]}")
+                    line_piece.place(x=50, y=300)
+                    line_piece_input = Entry(
+                        cut_line_gui, width=100, bg="white")
+                    line_piece_input.place(x=400, y=300)
+                    whole_line_input = Button(cut_line_gui, text="enter",
+                                              command=lambda:
+                                              check_correct_line(line_piece_input.get(), window))
+                    whole_line_input.place(x=60, y=80)
 
-        elif what_act == "emotion memory recall":
-            window = "emotion memory recall"
+            elif what_act == "emotion memory recall":
+                window = "emotion memory recall"
 
-            try:
-                EMR_instructions = Label(activity_frame, text=EMR_text[EMR_text_num],
-                                         padx=10, pady=2, bg="#E2B6CE", fg="#131117",
-                                         font=("Arial", 25))
-                EMR_instructions.place(x=50, y=50)
+                try:
+                    EMR_instructions = Label(activity_frame, text=EMR_text[EMR_text_num],
+                                             padx=10, pady=2, bg="#E2B6CE", fg="#131117",
+                                             font=("Arial", 25))
+                    EMR_instructions.place(x=50, y=50)
 
-                EMR_next_button = Button(activity_frame, command=next_EMR_prompt, padx=10, pady=2,
-                                         bg="#E2B6CE", fg="#131117", text="Next",
-                                         font=("Arial", 25))
-                EMR_next_button.place(x=600, y=200)
+                    EMR_next_button = Button(activity_frame, command=next_EMR_prompt, padx=10, pady=2,
+                                             bg="#E2B6CE", fg="#131117", text="Next",
+                                             font=("Arial", 25))
+                    EMR_next_button.place(x=600, y=200)
 
-            except IndexError:
-                next_activity()
+                except IndexError:
+                    next_activity()
 
-        elif what_act == "info/tips":
-            what_act_tips = Label(activity_frame, text=what_act_tips_text[what_act_tips_text_num],
-                                  padx=10, pady=2, bg="#E2B6CE", fg="#131117",
-                                  font=("Arial", 25))
-            what_act_tips.place(x=50, y=50)
+            elif what_act == "info/tips":
+                what_act_tips = Label(activity_frame, text=what_act_tips_text[what_act_tips_text_num],
+                                      padx=10, pady=2, bg="#E2B6CE", fg="#131117",
+                                      font=("Arial", 25))
+                what_act_tips.place(x=50, y=50)
 
-            what_act_tips_next_button = Button(activity_frame, command=next_tips_prompt, padx=10, pady=2,
-                                               bg="#E2B6CE", fg="#131117", text="Next",
-                                               font=("Arial", 25))
-            what_act_tips_next_button.place(x=600, y=200)
+                what_act_tips_next_button = Button(activity_frame, command=next_tips_prompt, padx=10, pady=2,
+                                                   bg="#E2B6CE", fg="#131117", text="Next",
+                                                   font=("Arial", 25))
+                what_act_tips_next_button.place(x=600, y=200)
 
 
 def select_activity(i, window, activity_duration):
@@ -500,9 +506,11 @@ def check_correct_line(whole_line, currentwindow):
             if not whole_line[-1] == ' ':
                 if not whole_line[0] == ' ':
 
-                    if str(word_list[word_to_use] + whole_line) == file_line_input[word_to_use]:
+                    if str(word_list[word_to_use] +
+                           whole_line) == file_line_input[word_to_use]:
                         messagebox.showinfo(
-                            title=None, message="you inputted the line in correctly!")
+                            title=None,
+                            message="you inputted the line in correctly!")
                     else:
                         messagebox.showwarning(
                             title=None,
@@ -510,7 +518,6 @@ def check_correct_line(whole_line, currentwindow):
                             f"the whole line was:   {file_line_input[word_to_use]}")
 
                     open_window("activity window", currentwindow)
-
                 else:
                     messagebox.showerror(
                         title=None, message="please remove spaces from infront of the line")
