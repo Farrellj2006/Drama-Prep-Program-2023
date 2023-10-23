@@ -1,12 +1,10 @@
-"""Drama_P_P 2023 - Jack Farrell"""
+"""Drama Prep Program 2023 - Jack Farrell"""
 
 
 from tkinter import Label, LabelFrame, Button, Tk, messagebox, Entry
 import random as r
 
-
 # L2 DISC Program 2023: Drama Prep
-
 
 # green #7CDF64
 # red #F45866
@@ -17,9 +15,7 @@ import random as r
 # purple #724E91
 # yellow #E8C04A
 
-
 # pylint: disable = E1111, E0601, W0601, W0602, W0603, W0621, C0103, C0209
-
 
 # constants, these are not to be modified, the code manipulates these viariables
 
@@ -39,7 +35,6 @@ letter_list = []
 word_list = []
 used_sentences = []
 file_line_input = []
-completed_activities = []
 line_cycle = 0
 difficulty = 0
 prep_time = 0
@@ -50,7 +45,6 @@ what_act_tips_text_num = 0
 what_act = ""
 
 # variables that can be modified
-
 
 # max_num_of_act =
 # <how many activities are in the program (in the 'activity_options' list)>
@@ -67,8 +61,8 @@ what_act_tips_text = ["These are some final useful tips that will help you "
                       "Always do a vocal warmup for a musical "
                       "5-10 minutes before the show",
                       "Physically be prepared for your performance. Stretch!",
-                      "make sure to use other warmup methods, which can be "
-                      "found online, alongside this program for the "
+                      "make sure to use other warmup methods, which can be\n"
+                      "found online, alongside this program for the\n"
                       "maximum benefits :D"]
 
 # Emotion Memory Recall text
@@ -91,7 +85,6 @@ EMR_text = ["This is a drama technique: emotion memory recall.",
             "Lets do this a couple more times, but with a different "
             "emotion or feeling",
             "When you are ready to leave this activity, press the NEXT button."]
-
 
 # button names and colours for difficulty and length of time selection
 activity_duration_options = [
@@ -118,8 +111,9 @@ exit_button = Button(program, command=closeprogram, text="exit",
                      font=("Arial", 25))
 exit_button.place(x=1775, y=40)
 
-
 # exit activity button
+
+
 def close_activity(currentwindow):
     """This function confirms wether the user wants to exit the drama prep"""
 
@@ -140,14 +134,13 @@ def clean_file():
         with open("report.txt", "w", encoding="utf-8") as emptf:
             emptf.write("")
 
-            # put 'start of session' text back, as it gets cleared
+            # put 'Session Start' text back, as it gets cleared
         with open("report.txt", "a", encoding="utf-8") as file:
-            file.write("\n----Start of Session----\n----Start of Prep----\n")
+            file.write("\n----Session Start----\n----Start of Prep----\n")
 
 
 def next_EMR_prompt():
     """Go to the next Emotion Memory Recall text prompt"""
-
     global EMR_text_num, EMR_round, prep_time
 
     if EMR_text_num == len(EMR_text)-3 and EMR_round > prep_time - 1:
@@ -189,8 +182,8 @@ def open_window(new_window, old_window):
     """This fuction is called when a new window needs to be opened or when a
     current window needs to be updated"""
 
-    global opening_frame, info_frame, start_frame, activity_frame, line_cycle, cut_line_gui, difficulty, prep_time, what_act, str_cut_line, file_line_input, word_list, used_sentences, word_to_use, completed_activities, EMR_text_num, EMR_round, max_num_of_act, actnum, what_act_tips_text_num
-
+    global opening_frame, info_frame, start_frame, activity_frame, cut_line_gui
+    global line_cycle, difficulty, prep_time, what_act, str_cut_line, file_line_input, word_list, used_sentences, word_to_use, EMR_text_num, EMR_round, max_num_of_act, actnum, what_act_tips_text_num
     # remove the old window
     if old_window == "opening window":
         opening_frame.destroy()
@@ -238,12 +231,10 @@ def open_window(new_window, old_window):
         clear_records.place(x=1440, y=800)
 
         # reset all constants for the end of the prep
-        cut_line = ""
         letter_list = []
         word_list = []
         used_sentences = []
         file_line_input = []
-        completed_activities = []
         line_cycle = 0
         difficulty = 0
         prep_time = 0
@@ -326,7 +317,8 @@ def open_window(new_window, old_window):
 
         time_duration_info_lable = Label(start_frame, text=str(
             "Length of time for prep: " + activity_duration[0] +
-            "\nDifficulty of prep: " + activity_duration[1]))
+            "\nDifficulty of prep: " + activity_duration[1]),
+            bg="#E2B6CE", font=('Arial', 14))
         time_duration_info_lable.place(x=60, y=60)
 
         # back button that only closes the activity
@@ -343,8 +335,15 @@ def open_window(new_window, old_window):
         # continue button
         continue_to_prep_button = Button(
             start_frame, text="start prep",
-            command=lambda: check_activity(activity_duration, window))
-        continue_to_prep_button.place(x=600, y=400)
+            command=lambda: check_activity(activity_duration, window),
+            font=('Arial', 16), bg="#7CDF64")
+        continue_to_prep_button.place(x=600, y=426)
+
+        # give user direction
+        if not old_window == "start screen":
+            messagebox.showinfo(title=None, message="Select an excersise"
+                                " duration and difficulty, then press\n"
+                                "'Start Prep'")
 
     elif new_window == "activity window":
         letter_list = []
@@ -376,19 +375,29 @@ def open_window(new_window, old_window):
 
                 # label to tell user to input a line from a script
                 # into the entry field
-                line_input_label = Label(
-                    cut_line_gui, text="enter line to learn here: ")
+                line_input_label = Label(cut_line_gui,
+                                         text="enter line to learn here: ",
+                                         font=('Arial', 20),
+                                         bg="#DCA7C4")
                 line_input_label.place(x=50, y=50)
                 # the entry field
-                line_input = Entry(cut_line_gui, width=120)
-                line_input.place(x=200, y=50)
+                line_input = Entry(cut_line_gui, width=60, font='Arial 15')
+                line_input.place(x=80, y=100)
 
                 # button to enter the contents of the entry field
                 recieve_line = Button(cut_line_gui, text="enter",
                                       command=lambda:
                                       write_to_lines(line_input, window,
-                                                     letter_list))
-                recieve_line.place(x=60, y=80)
+                                                     letter_list,),
+                                      font=('Arial', 14),
+                                      bg="#7CDF64")
+                recieve_line.place(x=120, y=200)
+
+                # give user direction
+                if not old_window == "activity window":
+                    messagebox.showinfo(title=None, message="enter a"
+                                        " line from your script.\n"
+                                        "make sure it has over 3 words")
 
                 if line_cycle > difficulty+1:
                     # 2nd part of the 'cut lines' activity
@@ -408,6 +417,11 @@ def open_window(new_window, old_window):
                             title=None, message="Activity complete. "
                             "Moving to the next one... ")
                         next_activity()
+                        # give user direction
+                        messagebox.showinfo(title=None, message="Read"
+                                            " the instructions and"
+                                            " then press the\n"
+                                            "'Next Prompt' button")
                     else:
                         # if selected line has already been used, pick a new one
                         while word_to_use in used_sentences:
@@ -430,23 +444,27 @@ def open_window(new_window, old_window):
 
                         # tells user what to do
                         line_piece = Label(cut_line_gui,
-                                           text="Please enter the rest of "
+                                           text="Please fill in the rest of "
                                            "this line: "
-                                           f"{word_list[word_to_use]}")
-                        line_piece.place(x=50, y=300)
+                                           f"{word_list[word_to_use]}",
+                                           font=("Arial", 20),
+                                           bg="#DCA7C4")
+                        line_piece.place(x=50, y=80)
                         # the entry field for the user
                         # to type the rest of the line into
                         line_piece_input = Entry(
-                            cut_line_gui, width=100, bg="white")
-                        line_piece_input.place(x=400, y=300)
+                            cut_line_gui, width=60, bg="white",
+                            font='Arial 15')
+                        line_piece_input.place(x=170, y=150)
                         # confirmation button for what the user has typed
                         whole_line_input = Button(cut_line_gui, text="enter",
                                                   command=lambda:
                                                   check_correct_line(
                                                       line_piece_input.get(),
-                                                      window))
-                        whole_line_input.place(x=60, y=80)
-
+                                                      window),
+                                                      font=('Arial', 14),
+                                                      bg="#7CDF64")
+                        whole_line_input.place(x=100, y=200)
             elif what_act == "emotion memory recall":
                 window = "emotion memory recall"
                 # to check for the end of the EMR script in 'EMR_text'
@@ -456,7 +474,7 @@ def open_window(new_window, old_window):
                                              padx=10, pady=2, bg="#E2B6CE",
                                              fg="#131117",
                                              font=("Arial", 25))
-                    EMR_instructions.place(x=50, y=50)
+                    EMR_instructions.place(x=80, y=100)
 
                     # show the next prompt/text
                     EMR_next_button = Button(activity_frame,
@@ -465,7 +483,7 @@ def open_window(new_window, old_window):
                                              bg="#E2B6CE", fg="#131117",
                                              text="Next Prompt",
                                              font=("Arial", 25))
-                    EMR_next_button.place(x=600, y=200)
+                    EMR_next_button.place(x=600, y=250)
 
                 # if user has reached the end
                 except IndexError:
@@ -480,7 +498,7 @@ def open_window(new_window, old_window):
                                           padx=10, pady=2, bg="#E2B6CE",
                                           fg="#131117",
                                           font=("Arial", 25))
-                    what_act_tips.place(x=50, y=100)
+                    what_act_tips.place(x=100, y=160)
 
                     # button to show the next prompt/text
                     what_act_tips_next_button = Button(activity_frame,
@@ -490,7 +508,7 @@ def open_window(new_window, old_window):
                                                        fg="#131117",
                                                        text="Next Tip",
                                                        font=("Arial", 25))
-                    what_act_tips_next_button.place(x=600, y=300)
+                    what_act_tips_next_button.place(x=650, y=360)
                 # if user reached the end of the tips list
                 except IndexError:
                     next_activity()
@@ -500,9 +518,9 @@ def open_window(new_window, old_window):
         except IndexError:
             # write to file to signify the end of a end of a prep
             with open("report.txt", "a", encoding="utf-8") as file:
-                file.write("\n----End of Drama Prep----\n\n")
+                file.write("\n----End of Prep----\n\n")
                 messagebox.showinfo(title=None, message="You have finished "
-                                    "the program's warmup"
+                                    "the program's warmup."
                                     " Thank you for using "
                                     "' Drama Prep Program '")
                 messagebox.showinfo(
@@ -548,7 +566,6 @@ def write_to_lines(line_from_input_line, window, letter_list):
     global line_cycle, str_cut_line, file_line_input, word_list
     cut_line = []
     str_cut_line = ""
-
 
 # code to filter out incorrect inputs and provide user
 # feedback based on what they did wrong
@@ -685,8 +702,8 @@ def check_correct_line(whole_line, currentwindow):
                                    " '\nthe expected line was      ' " +
                                    file_line_input[word_to_use] + " '\n")
                     open_window("activity window", currentwindow)
-
                 # helping the user to correct their input
+
                 else:
                     messagebox.showerror(
                         title=None, message="please remove spaces from "
@@ -726,8 +743,8 @@ def check_activity(selected_activities, window):
 
 open_window("opening window", "")
 
-with open("report.txt", "a", encoding="utf-8") as file:
-    file.write("\n----Start of Session----\n")
+with open("report.txt", "a", encoding="utf-8") as initfile:
+    initfile.write("\n----Session Start----\n")
 
 
 program.mainloop()
