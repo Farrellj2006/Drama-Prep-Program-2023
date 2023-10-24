@@ -183,7 +183,10 @@ def open_window(new_window, old_window):
     current window needs to be updated"""
 
     global opening_frame, info_frame, start_frame, activity_frame, cut_line_gui
-    global line_cycle, difficulty, prep_time, what_act, str_cut_line, file_line_input, word_list, used_sentences, word_to_use, EMR_text_num, EMR_round, max_num_of_act, actnum, what_act_tips_text_num
+    global line_cycle, difficulty, prep_time, what_act, str_cut_line
+    global file_line_input, word_list, used_sentences, word_to_use
+    global EMR_text_num, EMR_round, max_num_of_act
+    global actnum, what_act_tips_text_num
     # remove the old window
     if old_window == "opening window":
         opening_frame.destroy()
@@ -388,7 +391,7 @@ def open_window(new_window, old_window):
                 recieve_line = Button(cut_line_gui, text="enter",
                                       command=lambda:
                                       write_to_lines(line_input, window,
-                                                     letter_list,),
+                                                     letter_list),
                                       font=('Arial', 14),
                                       bg="#7CDF64")
                 recieve_line.place(x=120, y=200)
