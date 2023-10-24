@@ -268,7 +268,7 @@ def open_window(new_window, old_window):
             font=("Arial", 25))
         info_back_button.place(x=1500, y=40)
 
-        info_information1 = Label(info_frame, text="Created by: Jack Farrell\n",
+        info_information1 = Label(info_frame, text="Created by: Jack F\n",
                                   font=("Arial", 20), bg="#E2B6CE",
                                   fg="#131117")
 
