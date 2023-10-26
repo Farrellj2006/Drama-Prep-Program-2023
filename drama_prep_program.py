@@ -522,13 +522,16 @@ def open_window(new_window, old_window):
             # write to file to signify the end of a end of a prep
             with open("report.txt", "a", encoding="utf-8") as file:
                 file.write("\n----End of Prep----\n\n")
-                messagebox.showinfo(title=None, message="You have finished "
-                                    "the program's warmup."
-                                    " Thank you for using "
-                                    "' Drama Prep Program '")
-                messagebox.showinfo(
-                    title=None, message="Redirecting you back to the "
-                    "main window")
+            messagebox.showinfo(title=None, message="You have finished "
+                                "the program's warmup."
+                                " Thank you for using "
+                                "' Drama Prep Program '")
+            messagebox.showinfo(
+                title=None, message="Redirecting you back to the "
+                "main window")
+            messagebox.showinfo(
+                title=None, message="Make sure to drink some water before "
+                "you continue to get ready for a performance :D")
 
             # take user back to home screen
             open_window("opening window", window)
