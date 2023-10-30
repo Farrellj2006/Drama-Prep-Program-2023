@@ -1,21 +1,9 @@
-"""Drama Prep Program 2023 - Jack Farrell"""
+"""Drama Prep Program 2023 - Jack F"""
 
+# pylint: disable = E1111, E0601, W0601, W0602, W0603, W0621, C0103, C0209
 
 from tkinter import Label, LabelFrame, Button, Tk, messagebox, Entry
 import random as r
-
-# L2 DISC Program 2023: Drama Prep
-
-# green #7CDF64
-# red #F45866
-# off-white #FDF3EC
-# off-black #131117
-
-# pink #E8C5D8
-# purple #724E91
-# yellow #E8C04A
-
-# pylint: disable = E1111, E0601, W0601, W0602, W0603, W0621, C0103, C0209
 
 # constants, these are not to be modified, the code manipulates these viariables
 
@@ -30,7 +18,7 @@ activity_duration = ["please select a length of time",
                      "please select a difficulty"]
 
 # base variable setting
-cut_line = ""
+cut_line = []
 letter_list = []
 word_list = []
 used_sentences = []
@@ -71,7 +59,7 @@ EMR_text = ["This is a drama technique: emotion memory recall.",
             "realistic and believable. ",
             "This is an exercise which is reliant on you following these "
             "instructions to the best of your abilities.",
-            "Press the 'ready' button when you are ready to start the exercise",
+            "Press the 'Next Prompt' button when you are ready to start the exercise",
             "Lets start with something simple",
             "what you need to do is imagine an emotion",
             "example: anger",
@@ -185,8 +173,8 @@ def open_window(new_window, old_window):
     global opening_frame, info_frame, start_frame, activity_frame, cut_line_gui
     global line_cycle, difficulty, prep_time, what_act, str_cut_line
     global file_line_input, word_list, used_sentences, word_to_use
-    global EMR_text_num, EMR_round, max_num_of_act
-    global actnum, what_act_tips_text_num
+    global EMR_text_num, EMR_round, max_num_of_act, cut_line
+    global actnum, what_act_tips_text_num, letter_list
     # remove the old window
     if old_window == "opening window":
         opening_frame.destroy()
@@ -246,6 +234,8 @@ def open_window(new_window, old_window):
         actnum = 0
         what_act = ""
         what_act_tips_text_num = 0
+        cut_line = []
+        str_cut_line = ""
 
         # declare in the txt file that a new prep has started
         with open("report.txt", "a", encoding="utf-8") as file:
@@ -279,11 +269,11 @@ def open_window(new_window, old_window):
                                   "to prepare for drama performances\n"
                                   "where they need to be in "
                                   "character. To start the program, "
-                                  "return to the prevoius "
+                                  "return to the previous "
                                   "window.\n"
                                   "and press START. \n\n"
                                   "This program is designed "
-                                  "to be ased alongside other "
+                                  "to be used alongside other "
                                   "warmup methods",
                                   font=("Arial", 30), bg="#E2B6CE",
                                   fg="#131117")
@@ -292,15 +282,20 @@ def open_window(new_window, old_window):
     elif new_window == "start screen":
         window = "start screen"
 
-        # reset all possible constant varibales
+        # reset constant varibales
+
         letter_list = []
         word_list = []
         used_sentences = []
         file_line_input = []
-        EMR_round = 0
+        line_cycle = 0
         EMR_text_num = 0
+        EMR_round = 0
         actnum = 0
+        what_act = ""
         what_act_tips_text_num = 0
+        cut_line = []
+        str_cut_line = ""
 
         start_frame = LabelFrame(
             program, width=1720, height=900, bg="#E2B6CE")
@@ -400,7 +395,7 @@ def open_window(new_window, old_window):
                 if not old_window == "activity window":
                     messagebox.showinfo(title=None, message="enter a"
                                         " line from your script.\n"
-                                        "make sure it has over 3 words")
+                                        "Make sure it has over 3 words")
 
                 if line_cycle > difficulty+1:
                     # 2nd part of the 'cut lines' activity
@@ -469,7 +464,7 @@ def open_window(new_window, old_window):
                                                       bg="#7CDF64")
                         whole_line_input.place(x=100, y=200)
             elif what_act == "emotion memory recall":
-                window = "emotion memory recall"
+                # window = "emotion memory recall"
                 # to check for the end of the EMR script in 'EMR_text'
                 try:
                     EMR_instructions = Label(activity_frame,
@@ -487,6 +482,14 @@ def open_window(new_window, old_window):
                                              text="Next Prompt",
                                              font=("Arial", 25))
                     EMR_next_button.place(x=600, y=250)
+
+                    EMR_back_button = Button(activity_frame,
+                                             command=lambda:
+                                             close_activity(window),
+                                             text="back", padx=10, pady=2,
+                                             bg="#F45866", fg="#131117",
+                                             font=("Arial", 25))
+                    EMR_back_button.place(x=1500, y=40)
 
                 # if user has reached the end
                 except IndexError:
@@ -527,11 +530,11 @@ def open_window(new_window, old_window):
                                 " Thank you for using "
                                 "' Drama Prep Program '")
             messagebox.showinfo(
-                title=None, message="Redirecting you back to the "
-                "main window")
-            messagebox.showinfo(
                 title=None, message="Make sure to drink some water before "
                 "you continue to get ready for a performance :D")
+            messagebox.showinfo(
+                title=None, message="Redirecting you back to the "
+                "main window")
 
             # take user back to home screen
             open_window("opening window", window)
@@ -740,7 +743,7 @@ def check_activity(selected_activities, window):
     else:
         confirm_prep = messagebox.askquestion(
             title=None, message="are you sure you want to "
-            "start the activity(s)?")
+            "start the activities?")
         if confirm_prep == "yes":
             open_window("activity window", window)
 
@@ -751,6 +754,5 @@ open_window("opening window", "")
 
 with open("report.txt", "a", encoding="utf-8") as initfile:
     initfile.write("\n----Session Start----\n")
-
 
 program.mainloop()

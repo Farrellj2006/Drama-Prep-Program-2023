@@ -11,5 +11,7 @@
  to 'change the size of text, apps, and other items'.
  This setting will need to be modified to find the correct option to make vthe emtire program visible.
 
+ Make sure to have your performance's script with you, as well as a water bottle.
+
  ### The program should look like this:
  ![Example Image](/program_appearance.PNG "Program's intended appearance")
